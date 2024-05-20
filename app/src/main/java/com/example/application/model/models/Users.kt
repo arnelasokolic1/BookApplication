@@ -20,7 +20,7 @@ data class Users(
     val surname: String,
 
     @ColumnInfo(name = "email")
-    val dob: String? = null,
+    val email: String,
 
 
     @ColumnInfo(name = "password")

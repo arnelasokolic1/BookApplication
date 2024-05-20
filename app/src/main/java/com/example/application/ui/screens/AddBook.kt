@@ -1,13 +1,8 @@
 package com.example.application
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -15,18 +10,25 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.application.ui.theme.MyTheme
-import com.example.application.ui.theme.WelcomePage
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.application.ui.screens.MyTheme
+import com.example.application.viewModel.AddBookViewModel
+import com.example.application.viewModel.AppViewModelProvider
+import com.example.application.viewModel.LoginRegistrationViewModel
+import kotlinx.coroutines.launch
 
 @Composable
-fun AddBookScreen() {
+fun AddBookScreen(viewModel: AddBookViewModel = viewModel(factory = AppViewModelProvider.Factory)) {
     var bookName by remember { mutableStateOf("") }
     var author by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
+    var uiState = viewModel.booksUiState
+    var detailsState = uiState.booksDetails
+
+    //val homeUiState by viewModel.bookUiState.collectAsState() - za prikazivanje
 
     Column(
         modifier = Modifier
@@ -42,22 +44,23 @@ fun AddBookScreen() {
         )
 
         TextField(
-            value = bookName,
-            onValueChange = { bookName = it },
+            value = bookName, //iz UI state - Books.kt
+            onValueChange = { bookName = it; viewModel.updateUiState(detailsState.copy(name = it))  },
             label = { Text("Book Name") },
             modifier = Modifier.fillMaxWidth().padding(8.dp)
         )
 
         TextField(
             value = author,
-            onValueChange = { author = it },
+            onValueChange = { author = it;
+                viewModel.updateUiState(detailsState.copy(author= it)) },
             label = { Text("Author") },
             modifier = Modifier.fillMaxWidth().padding(8.dp)
         )
 
         TextField(
             value = description,
-            onValueChange = { description = it },
+            onValueChange = { description = it; viewModel.updateUiState(detailsState.copy(description = it))  },
             label = { Text("Description") },
             modifier = Modifier.fillMaxWidth().padding(8.dp)
         )
@@ -74,7 +77,7 @@ fun AddBookScreen() {
 
 
         Button(
-            onClick = { /* Handle adding book */ },
+            onClick = { coroutineScope.launch{viewModel.register()} },
             colors = ButtonDefaults.buttonColors(MyTheme.Purple),
             modifier = Modifier.padding(vertical = 16.dp)
         ) {

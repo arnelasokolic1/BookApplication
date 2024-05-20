@@ -1,7 +1,7 @@
-package com.example.application.ui.theme
+package com.example.application.ui.screens
 
+import android.util.Log
 import android.util.Patterns.EMAIL_ADDRESS
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,19 +21,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.application.R
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.application.viewModel.AppViewModelProvider
+import com.example.application.viewModel.LoginRegistrationViewModel
+import com.example.myapplication.R
+import kotlinx.coroutines.launch
 
 @Composable
-fun RegisterScreen() {
+fun RegisterScreen(viewModel: LoginRegistrationViewModel = viewModel(factory = AppViewModelProvider.Factory)) {
 
     var name by remember { mutableStateOf("") }
     var surname by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()  // sluzi da pozovemo ove funkcije suspend u drugoj klasi, drugoj ufnkciji ...
+    var uiState = viewModel.usersUiState
+    var detailsState = uiState.usersDetails
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -47,7 +53,10 @@ fun RegisterScreen() {
         Spacer(modifier = Modifier.height(16.dp)) // Add space between fields
         TextField(
             value = name,
-            onValueChange = { name = it },
+            onValueChange = {  name = it;
+                viewModel.updateUiState(detailsState.copy(name = it)) }, /* ovo moramo dodati, kako nase varijable kad se unose u bazu ne bi bile prazne
+                npr. kad unesmeo ime-  da se to ime ispise, u suprotnom bi bilo prazno jer smo po default stavili name da je tipa Stirng = " " (prazno)
+                u Users.kt */
             enabled = true,
             label = {
                 Text(text = "name")
@@ -64,7 +73,8 @@ fun RegisterScreen() {
         Spacer(modifier = Modifier.height(8.dp)) // Add space between fields
         TextField(
             value = surname,
-            onValueChange = { surname = it },
+            onValueChange =  {surname = it;
+                viewModel.updateUiState(detailsState.copy(surname = it)) },
             enabled = true,
             label = {
                 Text(text = "surname")
@@ -80,7 +90,8 @@ fun RegisterScreen() {
         Spacer(modifier = Modifier.height(8.dp)) // Add space between fields
         TextField(
             value = email,
-            onValueChange = { email = it },
+            onValueChange = {email= it;
+                viewModel.updateUiState(detailsState.copy(email = it)) },
             enabled = true,
             label = {
                 Text(text = "email")
@@ -97,7 +108,8 @@ fun RegisterScreen() {
 
         TextField(
             value = password,
-            onValueChange = { password = it },
+            onValueChange = {password = it;
+                viewModel.updateUiState(detailsState.copy(password = it)) },
             enabled = true,
             label = {
                 Text(text = "password")
@@ -115,7 +127,10 @@ fun RegisterScreen() {
 
         Spacer(modifier = Modifier.height(16.dp)) // Add space between fields
         Button(
-            onClick = { checkEmail(email) },
+            onClick = { checkEmail(email); coroutineScope.launch {
+              viewModel.register();
+                }
+            },
             colors = ButtonDefaults.buttonColors(containerColor = MyTheme.Purple), // Use the custom pink color
             modifier = Modifier.padding(vertical = 16.dp)
         ) {

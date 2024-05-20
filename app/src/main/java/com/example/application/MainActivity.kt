@@ -8,10 +8,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.example.application.ui.screens.AdminDashboard
 import com.example.application.ui.theme.APPLICATIONTheme
-import com.example.application.ui.theme.LoginScreen
-import com.example.application.ui.theme.RegisterScreen
-import com.example.application.ui.theme.WelcomePage
+import com.example.application.ui.screens.LoginScreen
+import com.example.application.ui.screens.ProfileScreen
+import com.example.application.ui.screens.RegisterScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +34,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyApp() {
     // You can directly call the WelcomePage composable here
-    LoginScreen()
+    AddBook()
 }
 
 

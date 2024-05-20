@@ -1,20 +1,31 @@
-package com.example.application.ui.theme
+package com.example.application.ui.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.application.viewModel.AppViewModelProvider
+import com.example.application.viewModel.UserHomeViewModel
+import com.example.application.viewModel.UserViewModel
 
 @Composable
 fun UserDashboard(
     onAboutUsClick: () -> Unit,
     onBooksClick: () -> Unit,
-    onLogoutClick: () -> Unit
+    onLogoutClick: () -> Unit,
+    viewModel: UserHomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val homeUiState by viewModel.homeUiState.collectAsState() /* poziv funkcije iz UserHomeViewModel */
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -28,24 +39,24 @@ fun UserDashboard(
         )
         Button(
             onClick = { onAboutUsClick() },
-            colors = ButtonDefaults.buttonColors(MyTheme.Purple),
+            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
             modifier = Modifier.padding(vertical = 8.dp)
         ) {
             Text(text = "About Us")
         }
         Button(
-            onClick = { onBooksClick() },
-            colors = ButtonDefaults.buttonColors(MyTheme.Purple),
-            modifier = Modifier.padding(vertical = 8.dp)
-        ) {
-            Text(text = "Books")
-        }
-        Button(
             onClick = { onLogoutClick() },
-            colors = ButtonDefaults.buttonColors(MyTheme.Purple),
+            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
             modifier = Modifier.padding(vertical = 8.dp)
         ) {
             Text(text = "Logout")
+        }
+    }
+
+
+    LazyRow {
+        items(homeUiState.bookList) {
+
         }
     }
 }

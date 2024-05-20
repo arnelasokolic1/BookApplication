@@ -1,4 +1,4 @@
-package com.example.application.ui.theme
+package com.example.application.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -13,7 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.application.R
+import com.example.myapplication.R
 
 @Composable
 fun AdminDashboard(

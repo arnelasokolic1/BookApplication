@@ -1,4 +1,4 @@
-package com.example.application
+package com.example.application.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -17,18 +17,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.application.ui.theme.MyTheme
+import com.example.myapplication.R
+
+// Define custom colors in your theme
+object MyTheme {
+
+    val DarkBlue = Color(0xFF1E3A8A)
+    val Purple = Color(0xFF755A90) // Purple color
+    val LightPurple = Color(0xFFA699B3)
+}
 
 @Composable
-fun AboutUs() {
+fun WelcomePage() {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Top,
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Add the image above the text
         Box(
             modifier = Modifier
                 .padding(vertical = 16.dp)
@@ -43,28 +48,24 @@ fun AboutUs() {
                     .border(5.dp, MyTheme.LightPurple, shape = CircleShape) // Purple border
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.slika11),
+                    painter = painterResource(id = R.drawable.book5),
                     contentDescription = "First photo",
                     modifier = Modifier.fillMaxSize()
                 )
             }
         }
-
+        // Adding text with a different font and blue color
         Text(
-            text = "About Us",
-            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+            text = "Welcome to BookLore",
+            color = Color.Black,
+            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold), // Make the text bold
             modifier = Modifier.padding(vertical = 16.dp)
         )
-
         Text(
-            text = "Welcome to BookLore, your gateway to the world of books! BookLore is an app designed to make your reading experience enjoyable and convenient. With BookLore, you can discover a vast collection of books spanning various genres, from classics to contemporary bestsellers.",
-            style = MaterialTheme.typography.bodyLarge,
+            text = "Unlock the World of Books",
             color = Color.Gray,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            modifier = Modifier.padding(vertical = 5.dp)
         )
-
-        Spacer(modifier = Modifier.height(20.dp)) // Adding space between fields
-
         Button(
             onClick = { /* Handle button click */ },
             colors = ButtonDefaults.buttonColors(MyTheme.Purple), // Use the custom pink color
@@ -72,11 +73,14 @@ fun AboutUs() {
         ) {
             Text(text = "Start Reading", color = Color.White)
         }
+
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
-    AboutUs()
+fun WelcomePagePreview() {
+    MaterialTheme {
+        WelcomePage()
+    }
 }

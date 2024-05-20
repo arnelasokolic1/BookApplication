@@ -1,4 +1,4 @@
-/*
+package com.example.application.ui.screens/*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent

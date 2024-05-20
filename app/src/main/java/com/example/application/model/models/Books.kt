@@ -17,10 +17,10 @@ data class Books(
     val name: String,
 
     @ColumnInfo(name = "author")
-    val surname: String,
+    val author: String,
 
     @ColumnInfo(name = "description")
-    val dob: String? = null,
+    val description: String,
 
 
     )
