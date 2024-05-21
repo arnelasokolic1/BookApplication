@@ -1,6 +1,7 @@
 package com.example.application.model.repositories
 
 import com.example.application.model.daos.UsersDao
+import com.example.application.model.models.Books
 import com.example.application.model.models.Users
 import kotlinx.coroutines.flow.Flow
 
@@ -18,5 +19,5 @@ class UserRepository(private val usersDao: UsersDao): BaseRepository<Users> {
 
     fun login(password: String, email: String): Flow<Users?> = usersDao.login(password, email)
 
-
+    fun getUsers(): Flow<List<Books>> = usersDao.getUsers()
 }

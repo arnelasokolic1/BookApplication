@@ -15,34 +15,42 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.application.model.models.Books
+import com.example.application.model.models.Users
+import com.example.application.viewModel.AdminUsersListViewModel
 import com.example.application.viewModel.AppViewModelProvider
+import com.example.application.viewModel.HomeUiState
 import com.example.application.viewModel.UserHomeViewModel
 
 @Composable
-fun BookItem(book: Books) {
+fun UserItem(user: Users) {
     Card(
         modifier = Modifier
             .padding(8.dp)
             .width(200.dp),
-       // elevation = 4.dp
+        // elevation = 4.dp
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = book.name,
+                text = "Name: ${user.name}",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Author: ${book.author}",
+                text = "Surname: ${user.surname}",
                 style = MaterialTheme.typography.bodyMedium
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Description: ${book.description}",
+                text = "Email: ${user.email}",
+                style = MaterialTheme.typography.bodySmall
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Paaword: ${user.password}",
                 style = MaterialTheme.typography.bodySmall
             )
         }
@@ -50,44 +58,26 @@ fun BookItem(book: Books) {
 }
 
 @Composable
-fun UserDashboard(
+fun AdminUsersList(
     onAboutUsClick: () -> Unit,
     onBooksClick: () -> Unit,
     onLogoutClick: () -> Unit,
-    viewModel: UserHomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: AdminUsersListViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+
     val homeUiState by viewModel.homeUiState.collectAsState()
+
+
 
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(20.dp))
-        Text(
-            text = "Hello Reader!",
-            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-            modifier = Modifier.padding(bottom = 50.dp)
-        )
-        Button(
-            onClick = { onAboutUsClick() },
-            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
-            modifier = Modifier.padding(vertical = 8.dp)
-        ) {
-            Text(text = "About Us")
-        }
-        Button(
-            onClick = { onLogoutClick() },
-            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
-            modifier = Modifier.padding(vertical = 8.dp)
-        ) {
-            Text(text = "Logout")
-        }
-
         Spacer(modifier = Modifier.height(10.dp))
 
         Text(
-            text = "Books!",
+            text = "Users!",
             style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.padding(bottom = 50.dp)
         )
@@ -98,8 +88,8 @@ fun UserDashboard(
 
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
         ) {
-            items(homeUiState.bookList) { book ->
-                BookItem(book)
+            items(homeUiState.userList) { user ->
+                UserItem(user)
             }
         }
     }
@@ -107,8 +97,8 @@ fun UserDashboard(
 
 @Preview(showBackground = true)
 @Composable
-fun UserDashboardPreview() {
+fun AdminUsersListViewModel() {
     MaterialTheme {
-        UserDashboard({}, {}, {})
+        AdminUsersList({},{},{})
     }
 }

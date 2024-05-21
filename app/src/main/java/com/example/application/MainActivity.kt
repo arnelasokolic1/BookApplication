@@ -13,6 +13,7 @@ import com.example.application.ui.theme.APPLICATIONTheme
 import com.example.application.ui.screens.LoginScreen
 import com.example.application.ui.screens.ProfileScreen
 import com.example.application.ui.screens.RegisterScreen
+import com.example.application.ui.screens.UserDashboard
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +35,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyApp() {
     // You can directly call the WelcomePage composable here
-    AddBook()
+    UserDashboard({}, {}, {})
 }
 
 

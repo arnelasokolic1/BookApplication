@@ -6,6 +6,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.application.UserApplication
+import com.example.application.ui.screens.AdminUsersListViewModel
 
 
 object AppViewModelProvider {
@@ -31,6 +32,13 @@ object AppViewModelProvider {
         initializer {
             AddBookViewModel(
                 userApplication().container.bookRepository //za svaki viewModel
+            )
+
+        }
+
+        initializer {
+            AdminUsersListViewModel(
+                userApplication().container.userRepository //za svaki viewModel
             )
 
         }
