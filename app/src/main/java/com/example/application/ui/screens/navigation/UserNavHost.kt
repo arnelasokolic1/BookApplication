@@ -11,8 +11,8 @@ import com.example.application.ui.screens.ProfileDestination
 import com.example.application.ui.screens.ProfileScreenWithTopBar
 import com.example.application.ui.screens.RegistrationDestination
 import com.example.application.ui.screens.RegistrationScreenWithTopBar
-//import com.example.application.ui.screens.UserDashboardDestination
-//import com.example.application.ui.screens.UserDashboardWithTopBar
+// import com.example.application.ui.screens.UserDashboardDestination
+// import com.example.application.ui.screens.UserDashboardWithTopBar
 import com.example.application.ui.screens.WelcomePageDestination
 import com.example.application.ui.screens.WelcomePageWithTopBar
 
@@ -30,7 +30,7 @@ fun UserNavHost(navController: NavHostController) {
             RegistrationScreenWithTopBar(
                 context = navController.context,
                 navigateToLogin = { navController.navigate(LoginDestination.route) },
-                navigateToProfilePage = { navController.navigate("${ProfileDestination.route}/${it}") }
+                navigateToProfilePage = { userId -> navController.navigate("${ProfileDestination.route}/$userId") }
             )
         }
         composable(
@@ -41,29 +41,22 @@ fun UserNavHost(navController: NavHostController) {
         ) {
             ProfileScreenWithTopBar(navigateBack = { navController.navigateUp() })
         }
+        composable(route = LoginDestination.route) {
+            LoginScreenWithTopBar(
+                navigateToRegister = { navController.navigate(RegistrationDestination.route) },
+                navigateToProfilePage = { userId -> navController.navigate("${ProfileDestination.route}/$userId") },
+                navigateToUserDashboard = { /* Define your UserDashboardDestination.route if necessary */ }
+            )
+        }
 
-        composable(route = WelcomePageDestination.route) {
-            WelcomePageWithTopBar(
+        // Uncomment and modify the below block if you want to add the user dashboard route
+        /*
+        composable(route = UserDashboardDestination.route) {
+            UserDashboardWithTopBar(
                 context = navController.context,
                 navigateToLogin = { navController.navigate(LoginDestination.route) }
             )
         }
-
-
-
-        /*   composable(route = UserDashboardDestination.route) {
-               UserDashboardWithTopBar(
-                   context = navController.context,
-                   navigateToLogin = { navController.navigate(LoginDestination.route) }
-               )
-
-               composable(route = LoginDestination.route) {
-                   LoginScreenWithTopBar(
-                       navigateToRegister = { navController.navigate(RegistrationDestination.route) },
-                       navigateToProfilePage = { navController.navigate("${ProfileDestination.route}/${it}") },
-                       navigateToUserDashboard = { navController.navigate(UserDashboardDestination.route) }
-                   )
-               }
-           } */
+        */
     }
 }
