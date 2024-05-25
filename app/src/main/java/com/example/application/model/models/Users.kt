@@ -26,6 +26,9 @@ data class Users(
     @ColumnInfo(name = "password")
     val password: String,
 
+    @ColumnInfo(name = "role")
+    val role: Int,
+
     )
 
 

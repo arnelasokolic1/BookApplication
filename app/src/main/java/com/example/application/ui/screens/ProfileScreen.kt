@@ -1,5 +1,6 @@
 package com.example.application.ui.screens
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -37,6 +38,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -65,6 +67,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.application.AboutUs
+import com.example.application.ui.screens.navigation.NavigationDestination
+import com.example.application.ui.screens.navigation.UserAppBar
 import com.example.application.viewModel.AppViewModelProvider
 import com.example.application.viewModel.LoginRegistrationViewModel
 import com.example.application.viewModel.UserViewModel
@@ -73,6 +77,29 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
+
+
+object ProfileDestination: NavigationDestination {
+    override val route = "profile"
+    override val title = "Profile"
+    const val userIdArg = "userID"
+    val routeWithArgs = "$route/{$userIdArg}"
+}
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun ProfileScreenWithTopBar(
+    viewModel: UserViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    navigateBack: () -> Unit
+) {
+    Scaffold(
+        topBar = {
+            UserAppBar(titleScreen = ProfileDestination.title, canNavigateBack = true, navigateBack = navigateBack)
+        }
+    ) {
+        ProfileScreen()
+    }
+}
 
 @Composable
 fun ProfileScreen(
@@ -153,7 +180,8 @@ fun ProfileScreen(
                         context.startActivity(Intent.createChooser(i, "Choose an Email client : "))
                     } catch (s: SecurityException) {
                         Toast
-                            .makeText(context, "An error occurred", Toast.LENGTH_LONG).show()
+                            .makeText(context, "An error occurred", Toast.LENGTH_LONG)
+                            .show()
                     }
                 }
                 .align(Alignment.Start)

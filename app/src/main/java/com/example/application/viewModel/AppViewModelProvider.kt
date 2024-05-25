@@ -6,8 +6,8 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.application.UserApplication
-import com.example.application.ui.screens.AdminUsersListViewModel
-
+//import com.example.application.ui.screens.AdminUsersListViewModel
+import androidx.lifecycle.createSavedStateHandle
 
 object AppViewModelProvider {
 
@@ -19,7 +19,8 @@ object AppViewModelProvider {
         }
         initializer {
             UserViewModel(
-                userApplication().container.userRepository
+                userApplication().container.userRepository,
+                this.createSavedStateHandle()
             )
         }
         initializer {
@@ -47,3 +48,5 @@ object AppViewModelProvider {
 
 fun CreationExtras.userApplication(): UserApplication =
     (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as UserApplication)
+
+

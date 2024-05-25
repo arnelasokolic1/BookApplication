@@ -1,5 +1,6 @@
 package com.example.application.ui.screens
 
+import android.content.Context
 import android.util.Log
 import android.util.Patterns.EMAIL_ADDRESS
 import androidx.compose.foundation.layout.*
@@ -8,12 +9,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,21 +20,53 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.application.ui.screens.navigation.NavigationDestination
+import com.example.application.ui.screens.navigation.UserAppBar
 import com.example.application.viewModel.AppViewModelProvider
 import com.example.application.viewModel.LoginRegistrationViewModel
 import com.example.myapplication.R
 import kotlinx.coroutines.launch
 
-@Composable
-fun RegisterScreen(viewModel: LoginRegistrationViewModel = viewModel(factory = AppViewModelProvider.Factory)) {
 
+object RegistrationDestination: NavigationDestination {
+    override val route = "registration"
+    override val title = "Registration"
+}
+
+@Composable
+fun RegistrationScreenWithTopBar(
+    context: Context,
+    navigateToLogin: () -> Unit,
+    navigateToProfilePage: (Int) -> Unit
+) {
+    Scaffold(
+        topBar = { UserAppBar(titleScreen = RegistrationDestination.title, canNavigateBack = false) }
+    ) { innerPadding ->
+        RegisterScreen(
+            context = context,
+            navigateToLogin = navigateToLogin,
+            navigateToProfilePage = navigateToProfilePage,
+            modifier = Modifier.padding(innerPadding)
+        )
+    }
+}
+
+
+@Composable
+fun RegisterScreen(
+    context: Context? = null,
+    viewModel: LoginRegistrationViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    navigateToLogin: () -> Unit,
+    navigateToProfilePage: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
     var name by remember { mutableStateOf("") }
     var surname by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val coroutineScope = rememberCoroutineScope()  // sluzi da pozovemo ove funkcije suspend u drugoj klasi, drugoj ufnkciji ...
-    var uiState = viewModel.usersUiState
-    var detailsState = uiState.usersDetails
+    val coroutineScope = rememberCoroutineScope()
+    val uiState = viewModel.usersUiState
+    val detailsState = uiState.usersDetails
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -50,109 +78,93 @@ fun RegisterScreen(viewModel: LoginRegistrationViewModel = viewModel(factory = A
             style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.padding(bottom = 16.dp)
         )
-        Spacer(modifier = Modifier.height(16.dp)) // Add space between fields
+        Spacer(modifier = Modifier.height(16.dp))
         TextField(
             value = name,
-            onValueChange = {  name = it;
-                viewModel.updateUiState(detailsState.copy(name = it)) }, /* ovo moramo dodati, kako nase varijable kad se unose u bazu ne bi bile prazne
-                npr. kad unesmeo ime-  da se to ime ispise, u suprotnom bi bilo prazno jer smo po default stavili name da je tipa Stirng = " " (prazno)
-                u Users.kt */
+            onValueChange = { name = it; viewModel.updateUiState(detailsState.copy(name = it)) },
             enabled = true,
-            label = {
-                Text(text = "name")
-            },
-            placeholder = {
-                Text(text = "name")
-            },
+            label = { Text(text = "Name") },
+            placeholder = { Text(text = "Name") },
             isError = false,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next)
+                imeAction = ImeAction.Next
+            )
         )
 
-        Spacer(modifier = Modifier.height(8.dp)) // Add space between fields
+        Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = surname,
-            onValueChange =  {surname = it;
-                viewModel.updateUiState(detailsState.copy(surname = it)) },
+            onValueChange = { surname = it; viewModel.updateUiState(detailsState.copy(surname = it)) },
             enabled = true,
-            label = {
-                Text(text = "surname")
-            },
-            placeholder = {
-                Text(text = "surname")
-            },
+            label = { Text(text = "Surname") },
+            placeholder = { Text(text = "Surname") },
             isError = false,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next)
+                imeAction = ImeAction.Next
+            )
         )
-        Spacer(modifier = Modifier.height(8.dp)) // Add space between fields
+        Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = email,
-            onValueChange = {email= it;
-                viewModel.updateUiState(detailsState.copy(email = it)) },
+            onValueChange = { email = it; viewModel.updateUiState(detailsState.copy(email = it)) },
             enabled = true,
-            label = {
-                Text(text = "email")
-            },
-            placeholder = {
-                Text(text = "example@exmaple.com")
-            },
+            label = { Text(text = "Email") },
+            placeholder = { Text(text = "example@example.com") },
             isError = !checkEmail(email),
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next)
+                imeAction = ImeAction.Next
+            )
         )
-        Spacer(modifier = Modifier.height(8.dp)) // Add space between fields
-
+        Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = password,
-            onValueChange = {password = it;
-                viewModel.updateUiState(detailsState.copy(password = it)) },
+            onValueChange = { password = it; viewModel.updateUiState(detailsState.copy(password = it)) },
             enabled = true,
-            label = {
-                Text(text = "password")
-            },
-            placeholder = {
-                Text(text = "password")
-            },
-              isError = !checkPassword(password),
+            label = { Text(text = "Password") },
+            placeholder = { Text(text = "Password") },
+            isError = !checkPassword(password),
             keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next)
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Next
+            )
         )
 
-
-
-        Spacer(modifier = Modifier.height(16.dp)) // Add space between fields
+        Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { checkEmail(email); coroutineScope.launch {
-              viewModel.register();
+            onClick = {
+                coroutineScope.launch {
+                    if (viewModel.register()) {
+                        Log.d("register", viewModel.usersUiState.toString())
+                       navigateToProfilePage(viewModel.usersUiState.usersDetails.id)
+                      //  navigateToLogin()
+                    }
                 }
             },
-            colors = ButtonDefaults.buttonColors(containerColor = MyTheme.Purple), // Use the custom pink color
+            colors = ButtonDefaults.buttonColors(containerColor = MyTheme.Purple),
             modifier = Modifier.padding(vertical = 16.dp)
         ) {
             Text(text = "REGISTER", color = Color.White)
         }
-        /* dodati poruku invalid email or pass */
-        Spacer(modifier = Modifier.height(5.dp)) // Add space between button and text
-        Text(
-            text = "Already have an account?",
-            color = Color.Gray,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-        Icon(painter = painterResource(id = R.drawable.baseline_visibility_24), contentDescription = null)
-        Icon(imageVector = Icons.Default.AccountCircle, contentDescription = null)
 
+        Spacer(modifier = Modifier.height(5.dp))
+        TextButton(
+            onClick =  { navigateToLogin() },
+            modifier = Modifier.padding(bottom = 16.dp)
+        ){
+            Text(
+                text = "Already have an account?",
+            )
+        }
+      //  Icon(painter = painterResource(id = R.drawable.baseline_visibility_24), contentDescription = null)
+       // Icon(imageVector = Icons.Default.AccountCircle, contentDescription = null)
     }
 }
 
-
-
-fun checkEmail(email: String): Boolean{
-    return  EMAIL_ADDRESS.matcher(email).matches()
+fun checkEmail(email: String): Boolean {
+    return EMAIL_ADDRESS.matcher(email).matches()
 }
 
 fun checkPassword(password: String): Boolean {
@@ -160,7 +172,7 @@ fun checkPassword(password: String): Boolean {
 }
 
 @Composable
-fun CustomRoundedTextField( // Renamed to avoid conflict
+fun CustomRoundedTextField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String
@@ -182,6 +194,9 @@ fun CustomRoundedTextField( // Renamed to avoid conflict
 @Composable
 fun RegisterScreenPreview() {
     MaterialTheme {
-        RegisterScreen()
+        RegisterScreen(
+            navigateToLogin = {},
+            navigateToProfilePage = {}
+        )
     }
 }

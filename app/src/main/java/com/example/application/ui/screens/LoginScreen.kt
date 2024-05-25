@@ -1,5 +1,6 @@
 package com.example.application.ui.screens
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -23,13 +24,48 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.application.ui.screens.navigation.NavigationDestination
+import com.example.application.ui.screens.navigation.UserAppBar
 import com.example.application.viewModel.AppViewModelProvider
 import com.example.application.viewModel.LoginRegistrationViewModel
 import com.example.myapplication.R
 import kotlinx.coroutines.launch
 
+object LoginDestination: NavigationDestination {
+    override val route = "login"
+    override val title = "Login"
+}
+
+
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun LoginScreen(viewModel: LoginRegistrationViewModel = viewModel(factory = AppViewModelProvider.Factory)) {
+fun LoginScreenWithTopBar(
+    navigateToRegister: () -> Unit,
+    navigateToProfilePage: (Int) -> Unit,
+    navigateToUserDashboard: () -> Unit,
+){
+    Scaffold(
+        topBar = { UserAppBar(titleScreen = LoginDestination.title, canNavigateBack = false)}
+    ) //{
+       // LoginScreen(navigateToRegister = navigateToRegister, navigateToProfilePage = navigateToProfilePage)
+    //}
+
+    {
+        LoginScreen(navigateToUserDashboard = navigateToUserDashboard  , navigateToProfilePage = navigateToProfilePage, navigateToRegister = navigateToRegister )
+
+
+    }
+}
+
+
+@Composable
+fun LoginScreen(viewModel: LoginRegistrationViewModel = viewModel(factory = AppViewModelProvider.Factory),
+                navigateToUserDashboard: () -> Unit,
+                navigateToProfilePage: (Int) -> Unit,
+                navigateToRegister: () -> Unit,
+)
+{
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
@@ -105,6 +141,8 @@ fun LoginScreen(viewModel: LoginRegistrationViewModel = viewModel(factory = AppV
                     Log.d("pre login", viewModel.usersUiState.toString())
                     if(viewModel.login()){
                         Log.d("login", viewModel.usersUiState.toString())
+                       // navigateToProfilePage(viewModel.usersUiState.usersDetails.id)
+                        navigateToUserDashboard()
                     }
                 }
             },
@@ -114,11 +152,14 @@ fun LoginScreen(viewModel: LoginRegistrationViewModel = viewModel(factory = AppV
             Text(text = "LOGIN", color = Color.White)
         }
         Spacer(modifier = Modifier.height(5.dp)) // Adding space between button and text
-        Text(
-            text = "Don't have an account yet?",
-            color = Color.Gray,
+        TextButton(
+            onClick =  { navigateToRegister() },
             modifier = Modifier.padding(bottom = 16.dp)
-        )
+        ){
+            Text(
+                text = "Don't have an account yet?",
+                )
+        }
     }
 }
 
@@ -149,6 +190,6 @@ fun RoundedTextField(
 @Composable
 fun LoginScreenPreview() {
     MaterialTheme {
-        LoginScreen()
+       // LoginScreen()
     }
 }

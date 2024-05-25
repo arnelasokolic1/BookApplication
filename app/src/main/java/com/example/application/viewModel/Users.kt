@@ -10,6 +10,7 @@ data class UsersDetails(
     val surname: String = "",
     val email: String = "",
     val password: String = "",
+    val role: Int =0,
 
 )
 
@@ -23,7 +24,8 @@ fun UsersDetails.toUsers(): Users = Users(
     name = name,
     surname = surname,
     password = password,
-    email = email
+    email = email,
+    role = role,
 )
 
 fun Users.toUsersDetails() = UsersDetails(
@@ -31,7 +33,9 @@ fun Users.toUsersDetails() = UsersDetails(
     name = name,
     surname = surname,
     password = password,
-    email = email
+    email = email,
+    role = role,
+
 )
 
 fun Users.toUserUiState(isEntryValid: Boolean = false): UsersUiState = UsersUiState(

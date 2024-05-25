@@ -1,5 +1,7 @@
 package com.example.application.ui.screens
 
+import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -7,6 +9,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,6 +20,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.application.ui.screens.navigation.NavigationDestination
+import com.example.application.ui.screens.navigation.UserAppBar
 import com.example.myapplication.R
 
 // Define custom colors in your theme
@@ -27,8 +32,30 @@ object MyTheme {
     val LightPurple = Color(0xFFA699B3)
 }
 
+
+object WelcomePageDestination: NavigationDestination {
+    override val route = "welcome_page"
+    override val title = ""
+}
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun WelcomePage() {
+fun WelcomePageWithTopBar(
+    context: Context,
+    navigateToLogin: () -> Unit
+) {
+    Scaffold(
+        topBar = { UserAppBar(titleScreen = WelcomePageDestination.title, canNavigateBack = false) }
+    ) {
+        WelcomePage(navigateToLogin = navigateToLogin)
+
+    }
+
+}
+
+@Composable
+fun WelcomePage(navigateToLogin: () -> Unit,
+                modifier: Modifier = Modifier) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -67,7 +94,7 @@ fun WelcomePage() {
             modifier = Modifier.padding(vertical = 5.dp)
         )
         Button(
-            onClick = { /* Handle button click */ },
+            onClick = { navigateToLogin()},
             colors = ButtonDefaults.buttonColors(MyTheme.Purple), // Use the custom pink color
             modifier = Modifier.padding(vertical = 16.dp)
         ) {
@@ -81,6 +108,6 @@ fun WelcomePage() {
 @Composable
 fun WelcomePagePreview() {
     MaterialTheme {
-        WelcomePage()
+        WelcomePage(navigateToLogin = {})
     }
 }

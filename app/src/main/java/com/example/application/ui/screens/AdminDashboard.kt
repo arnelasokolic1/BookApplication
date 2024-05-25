@@ -13,8 +13,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.application.ui.screens.navigation.NavigationDestination
 import com.example.myapplication.R
 
+
+object AdminDashboardDestination: NavigationDestination {
+    override val route = "registration"
+    override val title = "Registration"
+}
 @Composable
 fun AdminDashboard(
     onAddBookClick: () -> Unit,
