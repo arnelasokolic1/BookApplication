@@ -67,7 +67,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.application.AboutUs
 import com.example.application.ui.screens.navigation.NavigationDestination
 import com.example.application.ui.screens.navigation.UserAppBar
 import com.example.application.viewModel.AppViewModelProvider
@@ -199,13 +198,7 @@ fun ProfileScreen(
                 }
                 .align(Alignment.Start)
         ) {
-            Icon(
-                Icons.Default.MailOutline,
-                contentDescription = null,
-                modifier = Modifier.size(40.dp)
-            )
-            Spacer(modifier = Modifier.size(width = 20.dp, height = 0.dp))
-            Text(text = email)
+
         }
 
         Spacer(modifier = Modifier.size(height = 20.dp, width = 0.dp))

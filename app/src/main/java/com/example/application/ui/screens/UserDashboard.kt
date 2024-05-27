@@ -7,12 +7,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,8 +22,8 @@ import com.example.application.viewModel.AppViewModelProvider
 import com.example.application.viewModel.UserHomeViewModel
 import com.example.myapplication.R
 
-object UserDashboardDestination: NavigationDestination {
-    override val route = "user_dashboard" // Define your route here
+object UserDashboardDestination : NavigationDestination {
+    override val route = "user_dashboard"
     override val title = "User Dashboard"
 }
 
@@ -36,18 +33,26 @@ fun UserDashboardWithTopBar(
     navigateToRegister: () -> Unit,
     navigateToProfilePage: (Int) -> Unit,
     navigateToWelcomePage: () -> Unit
-){
+) {
     Scaffold(
         topBar = { UserAppBar(titleScreen = UserDashboardDestination.title, canNavigateBack = false) }
     ) {
-        UserDashboard(navigateToProfilePage = navigateToProfilePage,
+        UserDashboard(
+            navigateToProfilePage = navigateToProfilePage,
             navigateToRegister = navigateToRegister,
-            navigateToWelcomePage = navigateToWelcomePage)
+            navigateToWelcomePage = navigateToWelcomePage
+        )
     }
 }
 
 @Composable
-fun BookItem(book: Books, onDeleteClick: (Books) -> Unit) {
+fun BookItem(book: Books, onDeleteClick: (Books) -> Unit, onUpdateClick: (Books) -> Unit) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    if (showDialog) {
+        EditBookDialog(book = book, onDismiss = { showDialog = false }, onUpdateClick = onUpdateClick)
+    }
+
     Card(
         modifier = Modifier
             .padding(8.dp)
@@ -78,7 +83,7 @@ fun BookItem(book: Books, onDeleteClick: (Books) -> Unit) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Button(
-                    onClick = { /* TODO: Implement Edit functionality */ },
+                    onClick = { showDialog = true },
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
                     modifier = Modifier.padding(end = 8.dp)
                 ) {
@@ -94,6 +99,52 @@ fun BookItem(book: Books, onDeleteClick: (Books) -> Unit) {
             }
         }
     }
+}
+
+@Composable
+fun EditBookDialog(book: Books, onDismiss: () -> Unit, onUpdateClick: (Books) -> Unit) {
+    var title by remember { mutableStateOf(book.name) }
+    var author by remember { mutableStateOf(book.author) }
+    var description by remember { mutableStateOf(book.description) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(onClick = {
+                onUpdateClick(book.copy(name = title, author = author, description = description))
+                onDismiss()
+            }) {
+                Text("Save")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        },
+        title = { Text(text = "Edit Book") },
+        text = {
+            Column {
+                TextField(
+                    value = title,
+                    onValueChange = { title = it },
+                    label = { Text("Title") }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                TextField(
+                    value = author,
+                    onValueChange = { author = it },
+                    label = { Text("Author") }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                TextField(
+                    value = description,
+                    onValueChange = { description = it },
+                    label = { Text("Description") }
+                )
+            }
+        }
+    )
 }
 
 @Composable
@@ -119,13 +170,15 @@ fun UserDashboard(
 
         Spacer(modifier = Modifier.height(1.dp))
         LazyColumn(
-            modifier = Modifier.weight(1f), // Fill remaining space
+            modifier = Modifier.weight(1f),
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
         ) {
             items(homeUiState.bookList) { book ->
-                BookItem(book) { bookToDelete ->
-                    viewModel.deleteBook(bookToDelete)
-                }
+                BookItem(
+                    book = book,
+                    onDeleteClick = { bookToDelete -> viewModel.deleteBook(bookToDelete) },
+                    onUpdateClick = { bookToUpdate -> viewModel.updateBook(bookToUpdate) }
+                )
             }
         }
 
@@ -137,31 +190,31 @@ fun UserDashboard(
         ) {
             Box(
                 modifier = Modifier
-                    .size(60.dp) // Increase size of the icon
-                    .border(2.dp, MaterialTheme.colorScheme.primary) // Add a border with primary color
-                    .padding(8.dp) // Add padding inside the border
+                    .size(60.dp)
+                    .border(2.dp, MaterialTheme.colorScheme.primary)
+                    .padding(8.dp)
                     .clickable(onClick = navigateToRegister)
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_assignment_ind_24),
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary, // Tint the icon with primary color
-                    modifier = Modifier.size(40.dp) // Size of the icon inside the box
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(40.dp)
                 )
             }
-            Spacer(modifier = Modifier.width(16.dp)) // Add space between icons
+            Spacer(modifier = Modifier.width(16.dp))
             Box(
                 modifier = Modifier
-                    .size(60.dp) // Increase size of the icon
-                    .border(2.dp, MaterialTheme.colorScheme.primary) // Add a border with primary color
-                    .padding(8.dp) // Add padding inside the border
+                    .size(60.dp)
+                    .border(2.dp, MaterialTheme.colorScheme.primary)
+                    .padding(8.dp)
                     .clickable(onClick = navigateToWelcomePage)
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_logout_24),
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary, // Tint the icon with primary color
-                    modifier = Modifier.size(40.dp) // Size of the icon inside the box
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(40.dp)
                 )
             }
         }

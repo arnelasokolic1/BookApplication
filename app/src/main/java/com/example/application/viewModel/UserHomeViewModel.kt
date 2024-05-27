@@ -4,25 +4,36 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.application.model.models.Books
 import com.example.application.model.repositories.BookRepository
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class UserHomeViewModel(private val bookRepository: BookRepository) : ViewModel() {
+    private val _homeUiState = MutableStateFlow(HomeUiState(emptyList()))
+    val homeUiState: StateFlow<HomeUiState> = _homeUiState.asStateFlow()
 
-    val homeUiState: StateFlow<HomeUiState> = bookRepository.getBooks().map { HomeUiState(it) }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000L),
-        initialValue = HomeUiState()
-    )
+    init {
+        viewModelScope.launch {
+            bookRepository.getBooks().collect { books ->
+                _homeUiState.value = HomeUiState(books)
+            }
+        }
+    }
 
     fun deleteBook(book: Books) {
         viewModelScope.launch {
             bookRepository.delete(book)
         }
     }
+
+    fun updateBook(book: Books) {
+        viewModelScope.launch {
+            bookRepository.update(book)
+        }
+    }
 }
 
-data class HomeUiState(val bookList: List<Books> = emptyList())
+data class HomeUiState(
+    val bookList: List<Books>
+)

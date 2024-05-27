@@ -42,9 +42,8 @@ fun UserNavHost(navController: NavHostController) {
         composable(route = UserDashboardDestination.route) {
             UserDashboardWithTopBar(
                 navigateToRegister = { navController.navigate(RegistrationDestination.route) },
-                navigateToProfilePage = { userId -> navController.navigate("${ProfileDestination.route}/$userId") },
-                navigateToWelcomePage = { navController.navigate(WelcomePageDestination.route) } // Add this line
-            )
+                navigateToProfilePage = { userId -> navController.navigate("${ProfileDestination.route}/$userId") }
+            ) { navController.navigate(WelcomePageDestination.route) }
         }
     }
 }
