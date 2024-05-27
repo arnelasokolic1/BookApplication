@@ -30,17 +30,17 @@ fun UserAppBar(
                 }
             }
         },
-        actions = {
+        /*actions = {
             TextButton(onClick = onAboutUsClick) {
-                Text(text = "About Us", color = MaterialTheme.colorScheme.onSecondaryContainer,
-                    modifier = Modifier.padding(vertical = 8.dp))
+              /*  Text(text = "About Us", color = MaterialTheme.colorScheme.onSecondaryContainer,
+                    modifier = Modifier.padding(vertical = 8.dp))  */
 
                 Spacer(modifier = Modifier.size(width = 250.dp, height = 0.dp))
             }
             TextButton(onClick = onLogoutClick) {
-                Text(text = "Logout", color = MaterialTheme.colorScheme.onSecondaryContainer)
+           /*     Text(text = "Logout", color = MaterialTheme.colorScheme.onSecondaryContainer) */
             }
-        }
+        } */
     )
 }
 

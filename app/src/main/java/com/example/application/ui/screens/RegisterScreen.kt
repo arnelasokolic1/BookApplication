@@ -1,3 +1,4 @@
+// RegisterScreen.kt
 package com.example.application.ui.screens
 
 import android.content.Context
@@ -6,14 +7,11 @@ import android.util.Patterns.EMAIL_ADDRESS
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -27,10 +25,9 @@ import com.example.application.viewModel.LoginRegistrationViewModel
 import com.example.myapplication.R
 import kotlinx.coroutines.launch
 
-
-object RegistrationDestination: NavigationDestination {
+object RegistrationDestination : NavigationDestination {
     override val route = "registration"
-    override val title = "Registration"
+    override val title = "Register"
 }
 
 @Composable
@@ -51,7 +48,6 @@ fun RegistrationScreenWithTopBar(
     }
 }
 
-
 @Composable
 fun RegisterScreen(
     context: Context? = null,
@@ -65,8 +61,6 @@ fun RegisterScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
-    val uiState = viewModel.usersUiState
-    val detailsState = uiState.usersDetails
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -81,7 +75,7 @@ fun RegisterScreen(
         Spacer(modifier = Modifier.height(16.dp))
         TextField(
             value = name,
-            onValueChange = { name = it; viewModel.updateUiState(detailsState.copy(name = it)) },
+            onValueChange = { name = it; viewModel.updateUiState(viewModel.usersUiState.usersDetails.copy(name = it)) },
             enabled = true,
             label = { Text(text = "Name") },
             placeholder = { Text(text = "Name") },
@@ -95,7 +89,7 @@ fun RegisterScreen(
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = surname,
-            onValueChange = { surname = it; viewModel.updateUiState(detailsState.copy(surname = it)) },
+            onValueChange = { surname = it; viewModel.updateUiState(viewModel.usersUiState.usersDetails.copy(surname = it)) },
             enabled = true,
             label = { Text(text = "Surname") },
             placeholder = { Text(text = "Surname") },
@@ -108,7 +102,7 @@ fun RegisterScreen(
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = email,
-            onValueChange = { email = it; viewModel.updateUiState(detailsState.copy(email = it)) },
+            onValueChange = { email = it; viewModel.updateUiState(viewModel.usersUiState.usersDetails.copy(email = it)) },
             enabled = true,
             label = { Text(text = "Email") },
             placeholder = { Text(text = "example@example.com") },
@@ -121,7 +115,7 @@ fun RegisterScreen(
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = password,
-            onValueChange = { password = it; viewModel.updateUiState(detailsState.copy(password = it)) },
+            onValueChange = { password = it; viewModel.updateUiState(viewModel.usersUiState.usersDetails.copy(password = it)) },
             enabled = true,
             label = { Text(text = "Password") },
             placeholder = { Text(text = "Password") },
@@ -138,12 +132,12 @@ fun RegisterScreen(
                 coroutineScope.launch {
                     if (viewModel.register()) {
                         Log.d("register", viewModel.usersUiState.toString())
-                       navigateToProfilePage(viewModel.usersUiState.usersDetails.id)
-                      //  navigateToLogin()
+                        /*profileViewModel.updateUserData(name, surname, email) */
+                        navigateToProfilePage(viewModel.usersUiState.usersDetails.id)
                     }
                 }
             },
-            colors = ButtonDefaults.buttonColors(containerColor = MyTheme.Purple),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF755A90)),
             modifier = Modifier.padding(vertical = 16.dp)
         ) {
             Text(text = "REGISTER", color = Color.White)
@@ -151,15 +145,13 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(5.dp))
         TextButton(
-            onClick =  { navigateToLogin() },
+            onClick = { navigateToLogin() },
             modifier = Modifier.padding(bottom = 16.dp)
-        ){
+        ) {
             Text(
                 text = "Already have an account?",
             )
         }
-      //  Icon(painter = painterResource(id = R.drawable.baseline_visibility_24), contentDescription = null)
-       // Icon(imageVector = Icons.Default.AccountCircle, contentDescription = null)
     }
 }
 
@@ -169,25 +161,6 @@ fun checkEmail(email: String): Boolean {
 
 fun checkPassword(password: String): Boolean {
     return password.length >= 8
-}
-
-@Composable
-fun CustomRoundedTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    label: String
-) {
-    TextField(
-        value = value,
-        onValueChange = onValueChange,
-        label = { Text(label, color = Color.Gray) },
-        modifier = Modifier
-            .padding(vertical = 8.dp)
-            .fillMaxWidth()
-            .height(40.dp)
-            .padding(horizontal = 16.dp),
-        shape = RoundedCornerShape(15.dp)
-    )
 }
 
 @Preview(showBackground = true)

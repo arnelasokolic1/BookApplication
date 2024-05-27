@@ -1,11 +1,11 @@
 package com.example.application.ui.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -19,17 +19,39 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.application.model.models.Books
+import com.example.application.ui.screens.navigation.NavigationDestination
+import com.example.application.ui.screens.navigation.UserAppBar
 import com.example.application.viewModel.AppViewModelProvider
 import com.example.application.viewModel.UserHomeViewModel
 import com.example.myapplication.R
+
+object UserDashboardDestination: NavigationDestination {
+    override val route = "user_dashboard" // Define your route here
+    override val title = "User Dashboard"
+}
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun UserDashboardWithTopBar(
+    navigateToRegister: () -> Unit,
+    navigateToProfilePage: (Int) -> Unit,
+    navigateToWelcomePage: () -> Unit
+){
+    Scaffold(
+        topBar = { UserAppBar(titleScreen = UserDashboardDestination.title, canNavigateBack = false) }
+    ) {
+        UserDashboard(navigateToProfilePage = navigateToProfilePage,
+            navigateToRegister = navigateToRegister,
+            navigateToWelcomePage = navigateToWelcomePage)
+    }
+}
 
 @Composable
 fun BookItem(book: Books, onDeleteClick: (Books) -> Unit) {
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .width(350.dp),
-        // elevation = 4.dp
+            .width(350.dp)
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -76,10 +98,10 @@ fun BookItem(book: Books, onDeleteClick: (Books) -> Unit) {
 
 @Composable
 fun UserDashboard(
-    onAboutUsClick: () -> Unit,
-    onBooksClick: () -> Unit,
-    onLogoutClick: () -> Unit,
-    viewModel: UserHomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: UserHomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    navigateToProfilePage: (Int) -> Unit,
+    navigateToRegister: () -> Unit,
+    navigateToWelcomePage: () -> Unit
 ) {
     val homeUiState by viewModel.homeUiState.collectAsState()
 
@@ -118,6 +140,7 @@ fun UserDashboard(
                     .size(60.dp) // Increase size of the icon
                     .border(2.dp, MaterialTheme.colorScheme.primary) // Add a border with primary color
                     .padding(8.dp) // Add padding inside the border
+                    .clickable(onClick = navigateToRegister)
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_assignment_ind_24),
@@ -132,6 +155,7 @@ fun UserDashboard(
                     .size(60.dp) // Increase size of the icon
                     .border(2.dp, MaterialTheme.colorScheme.primary) // Add a border with primary color
                     .padding(8.dp) // Add padding inside the border
+                    .clickable(onClick = navigateToWelcomePage)
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_logout_24),
@@ -148,6 +172,10 @@ fun UserDashboard(
 @Composable
 fun UserDashboardPreview() {
     MaterialTheme {
-        UserDashboard({}, {}, {})
+        UserDashboardWithTopBar(
+            navigateToRegister = {},
+            navigateToProfilePage = {},
+            navigateToWelcomePage = {}
+        )
     }
 }

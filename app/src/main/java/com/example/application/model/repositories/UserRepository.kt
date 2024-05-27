@@ -20,4 +20,6 @@ class UserRepository(private val usersDao: UsersDao): BaseRepository<Users> {
     fun login(password: String, email: String): Flow<Users?> = usersDao.login(password, email)
 
     fun getUsers(): Flow<List<Users>> = usersDao.getUsers()
+
+    fun getUser(id: Int): Flow<Users?> = usersDao.getUser(id)
 }

@@ -5,16 +5,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.application.ui.screens.LoginDestination
-import com.example.application.ui.screens.LoginScreenWithTopBar
-import com.example.application.ui.screens.ProfileDestination
-import com.example.application.ui.screens.ProfileScreenWithTopBar
-import com.example.application.ui.screens.RegistrationDestination
-import com.example.application.ui.screens.RegistrationScreenWithTopBar
-// import com.example.application.ui.screens.UserDashboardDestination
-// import com.example.application.ui.screens.UserDashboardWithTopBar
-import com.example.application.ui.screens.WelcomePageDestination
-import com.example.application.ui.screens.WelcomePageWithTopBar
+import com.example.application.ui.screens.*
 
 @SuppressLint("ComposableDestinationInComposeScope")
 @Composable
@@ -45,18 +36,15 @@ fun UserNavHost(navController: NavHostController) {
             LoginScreenWithTopBar(
                 navigateToRegister = { navController.navigate(RegistrationDestination.route) },
                 navigateToProfilePage = { userId -> navController.navigate("${ProfileDestination.route}/$userId") },
-                navigateToUserDashboard = { /* Define your UserDashboardDestination.route if necessary */ }
+                navigateToUserDashboard = { navController.navigate(UserDashboardDestination.route) }
             )
         }
-
-        // Uncomment and modify the below block if you want to add the user dashboard route
-        /*
         composable(route = UserDashboardDestination.route) {
             UserDashboardWithTopBar(
-                context = navController.context,
-                navigateToLogin = { navController.navigate(LoginDestination.route) }
+                navigateToRegister = { navController.navigate(RegistrationDestination.route) },
+                navigateToProfilePage = { userId -> navController.navigate("${ProfileDestination.route}/$userId") },
+                navigateToWelcomePage = { navController.navigate(WelcomePageDestination.route) } // Add this line
             )
         }
-        */
     }
 }

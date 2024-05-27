@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -72,6 +73,7 @@ import com.example.application.ui.screens.navigation.UserAppBar
 import com.example.application.viewModel.AppViewModelProvider
 import com.example.application.viewModel.LoginRegistrationViewModel
 import com.example.application.viewModel.UserViewModel
+import com.example.myapplication.R
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -125,7 +127,18 @@ fun ProfileScreen(
             .fillMaxSize()
             .wrapContentSize()
     ) {
-        // ProfileImage()
+        Box(
+            modifier = Modifier
+                .size(150.dp)
+                .clip(CircleShape)
+                .border(5.dp, MyTheme.Purple, CircleShape) // Add a purple border
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.slika10),
+                contentDescription = "Picture",
+                modifier = Modifier.fillMaxSize()
+            )
+        }
 
         Spacer(modifier = Modifier.size(height = 30.dp, width = 0.dp))
         Row {
