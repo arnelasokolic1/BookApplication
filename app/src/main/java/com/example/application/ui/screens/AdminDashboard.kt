@@ -1,5 +1,6 @@
 package com.example.application.ui.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -14,18 +15,43 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.application.ui.screens.navigation.NavigationDestination
+import com.example.application.ui.screens.navigation.UserAppBar
 import com.example.myapplication.R
 
 
 object AdminDashboardDestination: NavigationDestination {
-    override val route = "registration"
-    override val title = "Registration"
+    override val route = "admin_dashboard"
+    override val title = ""
+    //dodati argumente
+    const val userIdArg = "userID"
+    val routeWithArgs = "$route/{$userIdArg}"
 }
+
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun AdminDashboard(
-    onAddBookClick: () -> Unit,
-    onManageUsersClick: () -> Unit,
-    onLogoutClick: () -> Unit
+fun AdminDashboardScreenWithTopBar(
+    navigateToAddBook: () -> Unit,
+    navigateToProfilePage: (Int) -> Unit,
+    navigateToUserDashboard: () -> Unit,
+){
+    Scaffold(
+        topBar = { UserAppBar(titleScreen = AdminDashboardDestination.title, canNavigateBack = false) }
+    ) //{
+    // LoginScreen(navigateToRegister = navigateToRegister, navigateToProfilePage = navigateToProfilePage)
+    //}
+
+    {
+        AdminDashboard(navigateToUserDashboard = navigateToUserDashboard  , navigateToProfilePage = navigateToProfilePage, navigateToAddBook = navigateToAddBook )
+
+
+    }
+}
+
+@Composable
+fun AdminDashboard( navigateToAddBook: () -> Unit,
+                    navigateToUserDashboard: () -> Unit,
+                    navigateToProfilePage:  (Int) -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -52,25 +78,33 @@ fun AdminDashboard(
         }
         Spacer(modifier = Modifier.height(32.dp)) // Add bigger space between photo and buttons
         Button(
-            onClick = { onAddBookClick() },
+            onClick = { navigateToAddBook() },
             colors = ButtonDefaults.buttonColors(MyTheme.Purple),
             modifier = Modifier.padding(vertical = 8.dp)
         ) {
             Text(text = "Add Book")
         }
         Button(
-            onClick = { onManageUsersClick() },
+            onClick = {  },
             colors = ButtonDefaults.buttonColors(MyTheme.Purple),
             modifier = Modifier.padding(vertical = 8.dp)
         ) {
             Text(text = "Users")
         }
         Button(
-            onClick = { onLogoutClick() },
+            onClick = { },
             colors = ButtonDefaults.buttonColors(MyTheme.Purple),
             modifier = Modifier.padding(vertical = 8.dp)
         ) {
             Text(text = "Logout")
+        }
+
+        Button(
+            onClick = { },
+            colors = ButtonDefaults.buttonColors(MyTheme.Purple),
+            modifier = Modifier.padding(vertical = 8.dp)
+        ) {
+            Text(text = "Books")
         }
     }
 }

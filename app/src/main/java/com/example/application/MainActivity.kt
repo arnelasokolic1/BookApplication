@@ -31,8 +31,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                  // MyApp()
-                 UserNavHost(navController = rememberNavController())
+                  MyApp()
+                 //UserNavHost(navController = rememberNavController())
+
                 }
             }
         }
@@ -41,9 +42,9 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MyApp() {
-
-
+    AdminDashboard({}, {}, {})
 
 }
+
 
 

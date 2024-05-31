@@ -42,17 +42,17 @@ object LoginDestination: NavigationDestination {
 @Composable
 fun LoginScreenWithTopBar(
     navigateToRegister: () -> Unit,
-    navigateToProfilePage: (Int) -> Unit,
-    navigateToUserDashboard: () -> Unit,
+    navigateToAdmin: (Int) -> Unit,
+    navigateToUserDashboard: (Int) -> Unit,
 ){
     Scaffold(
         topBar = { UserAppBar(titleScreen = LoginDestination.title, canNavigateBack = false)}
     ) //{
-       // LoginScreen(navigateToRegister = navigateToRegister, navigateToProfilePage = navigateToProfilePage)
+    // LoginScreen(navigateToRegister = navigateToRegister, navigateToProfilePage = navigateToProfilePage)
     //}
 
     {
-        LoginScreen(navigateToUserDashboard = navigateToUserDashboard  , navigateToProfilePage = navigateToProfilePage, navigateToRegister = navigateToRegister )
+        LoginScreen(navigateToUserDashboard = navigateToUserDashboard  , navigateToAdmin = navigateToAdmin, navigateToRegister = navigateToRegister )
 
 
     }
@@ -61,8 +61,8 @@ fun LoginScreenWithTopBar(
 
 @Composable
 fun LoginScreen(viewModel: LoginRegistrationViewModel = viewModel(factory = AppViewModelProvider.Factory),
-                navigateToUserDashboard: () -> Unit,
-                navigateToProfilePage: (Int) -> Unit,
+                navigateToUserDashboard: (Int) -> Unit,
+                navigateToAdmin: (Int) -> Unit,
                 navigateToRegister: () -> Unit,
 )
 {
@@ -141,8 +141,13 @@ fun LoginScreen(viewModel: LoginRegistrationViewModel = viewModel(factory = AppV
                     Log.d("pre login", viewModel.usersUiState.toString())
                     if(viewModel.login()){
                         Log.d("login", viewModel.usersUiState.toString())
-                       // navigateToProfilePage(viewModel.usersUiState.usersDetails.id)
-                        navigateToUserDashboard()
+                        if(viewModel.usersUiState.usersDetails.role == 1){
+                            navigateToAdmin(viewModel.usersUiState.usersDetails.id)
+                        }else{
+                            navigateToUserDashboard(viewModel.usersUiState.usersDetails.id)
+                        }
+                        // navigateToProfilePage(viewModel.usersUiState.usersDetails.id)
+
                     }
                 }
             },
@@ -158,7 +163,7 @@ fun LoginScreen(viewModel: LoginRegistrationViewModel = viewModel(factory = AppV
         ){
             Text(
                 text = "Don't have an account yet?",
-                )
+            )
         }
     }
 }
@@ -190,6 +195,6 @@ fun RoundedTextField(
 @Composable
 fun LoginScreenPreview() {
     MaterialTheme {
-       // LoginScreen()
+        // LoginScreen()
     }
 }

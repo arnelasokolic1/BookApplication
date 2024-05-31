@@ -1,9 +1,11 @@
  package com.example.application
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
@@ -13,14 +15,50 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.application.ui.screens.LoginScreen
 import com.example.application.ui.screens.MyTheme
+import com.example.application.ui.screens.navigation.NavigationDestination
+import com.example.application.ui.screens.navigation.UserAppBar
 import com.example.application.viewModel.AddBookViewModel
 import com.example.application.viewModel.AppViewModelProvider
 import com.example.application.viewModel.LoginRegistrationViewModel
 import kotlinx.coroutines.launch
 
+
+
+ object AddBookDestination: NavigationDestination {
+     override val route = "add_book"
+     override val title = "Add Book"
+ }
+
+
+
+ @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+ @Composable
+ fun AddBookBar(
+     navigateToRegister: () -> Unit,
+     navigateToAdminDashboard: (Int) -> Unit,
+     navigateToUserDashboard: () -> Unit,
+ ){
+     Scaffold(
+         topBar = { UserAppBar(titleScreen = AddBookDestination.title, canNavigateBack = false) }
+     ) //{
+     // LoginScreen(navigateToRegister = navigateToRegister, navigateToProfilePage = navigateToProfilePage)
+     //}
+
+     {
+         AddBookScreen(navigateToUserDashboard = navigateToUserDashboard  , navigateToAdminDashboard=navigateToAdminDashboard, navigateToRegister = navigateToRegister )
+
+
+     }
+ }
+
+
 @Composable
-fun AddBookScreen(viewModel: AddBookViewModel = viewModel(factory = AppViewModelProvider.Factory)) {
+fun AddBookScreen(viewModel: AddBookViewModel = viewModel(factory = AppViewModelProvider.Factory),
+                  navigateToUserDashboard: () -> Unit,
+                  navigateToAdminDashboard: (Int) -> Unit,
+                  navigateToRegister: () -> Unit) {
     var bookName by remember { mutableStateOf("") }
     var author by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
@@ -87,12 +125,12 @@ fun AddBookScreen(viewModel: AddBookViewModel = viewModel(factory = AppViewModel
 }
 
 
-@Preview(showBackground = true)
+/*@Preview(showBackground = true)
 @Composable
 fun AddBook() {
     MaterialTheme {
-        AddBookScreen()
+        AddBookScreen({})
     }
 }
-
+*/
 

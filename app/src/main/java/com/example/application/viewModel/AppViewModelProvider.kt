@@ -25,7 +25,9 @@ object AppViewModelProvider {
         }
         initializer {
             UserHomeViewModel(
-                userApplication().container.bookRepository
+                bookRepository = userApplication().container.bookRepository,
+                savedStateHandle = this.createSavedStateHandle(),
+                userRepository = userApplication().container.userRepository,
             )
         }
         initializer {

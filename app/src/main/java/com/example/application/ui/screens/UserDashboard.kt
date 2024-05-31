@@ -1,6 +1,7 @@
 package com.example.application.ui.screens
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,12 +21,16 @@ import com.example.application.ui.screens.navigation.NavigationDestination
 import com.example.application.ui.screens.navigation.UserAppBar
 import com.example.application.viewModel.AppViewModelProvider
 import com.example.application.viewModel.UserHomeViewModel
+import com.example.application.viewModel.UserViewModel
 import com.example.myapplication.R
 
 object UserDashboardDestination : NavigationDestination {
-    override val route = "user_dashboard"
+    override val route = "userdashboard"
     override val title = "User Dashboard"
+    const val userIdArg = "userID"
+    val routeWithArgs = "$route/{$userIdArg}"
 }
+
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -46,7 +51,15 @@ fun UserDashboardWithTopBar(
 }
 
 @Composable
-fun BookItem(book: Books, onDeleteClick: (Books) -> Unit, onUpdateClick: (Books) -> Unit) {
+fun BookItem(
+    book: Books, onDeleteClick: (Books) -> Unit, onUpdateClick: (Books) -> Unit,
+    viewModel: UserHomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
+) {
+    val uiState = viewModel.usersUiState
+    val detailsState = uiState.usersDetails
+
+    Log.d("UserDashboard1",detailsState.toString())
+
     var showDialog by remember { mutableStateOf(false) }
 
     if (showDialog) {
@@ -82,20 +95,23 @@ fun BookItem(book: Books, onDeleteClick: (Books) -> Unit, onUpdateClick: (Books)
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Button(
-                    onClick = { showDialog = true },
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
-                    modifier = Modifier.padding(end = 8.dp)
-                ) {
-                    Text(text = "EDIT")
-                }
-                Button(
-                    onClick = { onDeleteClick(book) },
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
-                    modifier = Modifier.padding(start = 8.dp)
-                ) {
-                    Text(text = "DELETE")
-                }
+              if(detailsState.role == 1)  {
+                      Button(
+                          onClick = { showDialog = true },
+                          colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
+                          modifier = Modifier.padding(end = 8.dp)
+                      ) {
+                          Text(text = "EDIT")
+                      }
+
+                    Button(
+                        onClick = { onDeleteClick(book) },
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                        modifier = Modifier.padding(start = 8.dp)
+                    ) {
+                        Text(text = "DELETE")
+                    }
+              }
             }
         }
     }
