@@ -5,9 +5,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.application.AddBookBar
 import com.example.application.AddBookDestination
 import com.example.application.ui.screens.*
-import com.example.application.ui.screens.AdminDashboardDestination.userIdArg
 
 @SuppressLint("ComposableDestinationInComposeScope")
 @Composable
@@ -41,8 +41,6 @@ fun UserNavHost(navController: NavHostController) {
                 navigateToUserDashboard = { navController.navigate("${UserDashboardDestination.route}/$it") }
             )
         }
-        // staviti rutu u navigate()
-        //kreirati AdmindASHBOARD RUTU
         composable(
             route = UserDashboardDestination.routeWithArgs,
             arguments = listOf(navArgument(UserDashboardDestination.userIdArg) {
@@ -50,24 +48,45 @@ fun UserNavHost(navController: NavHostController) {
             })
         ) {
             UserDashboardWithTopBar(
-                navigateToRegister = { navController.navigate(RegistrationDestination.route) },
+                navigateToAddBook = { navController.navigate(AddBookDestination.route) },
                 navigateToProfilePage = { userId -> navController.navigate("${ProfileDestination.route}/$userId") },
-                navigateToWelcomePage = { navController.navigate(WelcomePageDestination.route) })
+                navigateToAdminUsersList = { navController.navigate(AdminUsersListDestination.route) },
+                navigateToWelcomePage = { navController.navigate(WelcomePageDestination.route) }
+            )
+        }
+
+        composable(route = AdminUsersListDestination.route) {
+            AdminUsersListWithTopBar(
+                navigateToUserDashboard = { navController.navigate(UserDashboardDestination.route) },
+
+                    navigateBack = { navController.navigateUp() }
+
+                )
 
 
         }
 
+
         composable(
-            route = AddBookDestination.route) {
+            route = AdminDashboardDestination.routeWithArgs,
+            arguments = listOf(navArgument(AdminDashboardDestination.userIdArg) {
                 type = NavType.IntType
             })
         ) {
-            AddBookWithTopBar(
-                navigateToRegister = { navController.navigate(RegistrationDestination.route) },
-                navigateToAdminDashboard = { navController.navigate("${UserDashboardDestination.route}/$it") }
-                navigateToWelcomePage = { navController.navigate(WelcomePageDestination.route) })
+            AdminDashboardScreenWithTopBar(
+                navigateToAddBook = { navController.navigate(AddBookDestination.route) },
+                navigateToProfilePage = { userId -> navController.navigate("${ProfileDestination.route}/$userId") },
+                navigateToUserDashboard = { navController.navigate(UserDashboardDestination.route) }
+            )
+        }
 
+        composable(route = AddBookDestination.route) {
+            AddBookBar(
+                navigateToUserDashboard = { navController.navigate(UserDashboardDestination.route) },
+                navigateToRegister = { navController.navigate(RegistrationDestination.route) },
+                navigateToAdminDashboard = { navController.navigate(AdminDashboardDestination.route) },
+                        navigateBack = { navController.navigateUp() }
+            )
         }
     }
-
 }

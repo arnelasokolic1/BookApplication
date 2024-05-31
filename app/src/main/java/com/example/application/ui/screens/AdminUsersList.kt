@@ -1,5 +1,6 @@
 package com.example.application.ui.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 //import androidx.compose.foundation.layout.FlowRowScopeInstance.align
 //import androidx.compose.foundation.layout.ColumnScopeInstance.align
@@ -17,9 +18,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.application.model.models.Users
+import com.example.application.ui.screens.navigation.NavigationDestination
+import com.example.application.ui.screens.navigation.UserAppBar
 import com.example.application.viewModel.AdminUsersListViewModel
 import com.example.application.viewModel.AppViewModelProvider
 import com.example.myapplication.R
+
+object AdminUsersListDestination: NavigationDestination {
+    override val route = "admin_users_list"
+    override val title = "Admin Users list"
+}
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun AdminUsersListWithTopBar(
+    navigateToUserDashboard: () -> Unit,
+    navigateBack: () -> Unit
+){
+    Scaffold(
+        topBar = { UserAppBar(titleScreen = AdminUsersListDestination.title, canNavigateBack = true, navigateBack = navigateBack) }
+    ) {
+        AdminUsersList(navigateToUserDashboard = navigateToUserDashboard)
+    }
+}
 
 @Composable
 fun UserItem(
@@ -61,12 +82,7 @@ fun UserItem(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Button(
-                    onClick = { onEditClick(user) },
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
-                    modifier = Modifier.padding(end = 8.dp)
-                ) {
-                    Text(text = "EDIT")
+
 
                 }
                 Button(
@@ -77,23 +93,17 @@ fun UserItem(
                     Text(text = "DELETE")
                 }
 
-                // Icon after the DELETE button
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_logout_24),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(40.dp)
-                )
+
+
             }
         }
     }
-}
+
 
 @Composable
 fun AdminUsersList(
-    onAboutUsClick: () -> Unit,
-    onBooksClick: () -> Unit,
-    onLogoutClick: () -> Unit,
+    navigateToUserDashboard: () -> Unit,
+
     viewModel: AdminUsersListViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val homeUiState by viewModel.homeUiState.collectAsState()
@@ -131,6 +141,7 @@ fun AdminUsersList(
 @Composable
 fun AdminUsersListPreview() {
     MaterialTheme {
-        AdminUsersList({}, {}, {})
+        AdminUsersList(navigateToUserDashboard = {})
+
     }
 }

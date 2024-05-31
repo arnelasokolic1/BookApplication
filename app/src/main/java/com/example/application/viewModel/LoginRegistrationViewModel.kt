@@ -15,14 +15,11 @@ class LoginRegistrationViewModel(private val userRepository: UserRepository): Vi
     var usersUiState by mutableStateOf(UsersUiState())
         private set
 
-    /* Funkcije koje su suspend mozemo pozvati u drugim klasama i tu se koristi
-    coroutineScope.launch { }
-    Pozivamo u RegisterScreen npr.
- */
+
     suspend fun register(): Boolean{
-                if(validateInput()){
-                    userRepository.insert(usersUiState.usersDetails.toUsers())
-                    login()
+        if(validateInput()){
+            userRepository.insert(usersUiState.usersDetails.toUsers())
+            login()
             return true
         }else return false
     }

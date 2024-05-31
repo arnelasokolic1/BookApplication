@@ -79,18 +79,18 @@ fun LoginScreen(viewModel: LoginRegistrationViewModel = viewModel(factory = AppV
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Add the image above the "Welcome back, Login!" text
+        // Adding the image above the "Welcome back, Login!" text
         Box(
             modifier = Modifier
                 .padding(vertical = 16.dp)
-                .padding(10.dp), // Add padding to create a frame effect
+                .padding(10.dp), // Adding padding to create a frame effect
             contentAlignment = Alignment.Center
         ) {
             // Adding a circular frame around the image
             Box(
                 modifier = Modifier
                     .size(150.dp)
-                    .clip(CircleShape) // Make the image circular
+                    .clip(CircleShape) // Making the image circular
                     .border(5.dp, MyTheme.LightPurple, CircleShape)
             ) {
                 // image
@@ -146,7 +146,7 @@ fun LoginScreen(viewModel: LoginRegistrationViewModel = viewModel(factory = AppV
                         }else{
                             navigateToUserDashboard(viewModel.usersUiState.usersDetails.id)
                         }
-                        // navigateToProfilePage(viewModel.usersUiState.usersDetails.id)
+
 
                     }
                 }
@@ -168,9 +168,7 @@ fun LoginScreen(viewModel: LoginRegistrationViewModel = viewModel(factory = AppV
     }
 }
 
-/* varijabla na pocetku false mutablestateof, kada user unese pass provjerimo sa funkcijom,
-ta funkcija ce pormijeniti pocetnu varijablu - ispod text file pass if variabla = true -> vrati text
- */
+
 
 @Composable
 fun RoundedTextField(

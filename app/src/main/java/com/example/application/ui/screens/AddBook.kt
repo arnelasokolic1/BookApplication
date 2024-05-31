@@ -1,4 +1,4 @@
- package com.example.application
+package com.example.application
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
@@ -26,32 +26,33 @@ import kotlinx.coroutines.launch
 
 
 
- object AddBookDestination: NavigationDestination {
-     override val route = "add_book"
-     override val title = "Add Book"
- }
+object AddBookDestination: NavigationDestination {
+    override val route = "add_book"
+    override val title = "Add Book"
+}
 
 
 
- @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
- @Composable
- fun AddBookBar(
-     navigateToRegister: () -> Unit,
-     navigateToAdminDashboard: (Int) -> Unit,
-     navigateToUserDashboard: () -> Unit,
- ){
-     Scaffold(
-         topBar = { UserAppBar(titleScreen = AddBookDestination.title, canNavigateBack = false) }
-     ) //{
-     // LoginScreen(navigateToRegister = navigateToRegister, navigateToProfilePage = navigateToProfilePage)
-     //}
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun AddBookBar(
+    navigateToRegister: () -> Unit,
+    navigateToAdminDashboard: (Int) -> Unit,
+    navigateToUserDashboard: () -> Unit,
+    navigateBack: () -> Unit
+){
+    Scaffold(
+        topBar = { UserAppBar(titleScreen = AddBookDestination.title, canNavigateBack = true, navigateBack = navigateBack) }
+    ) //{
+    // LoginScreen(navigateToRegister = navigateToRegister, navigateToProfilePage = navigateToProfilePage)
+    //}
 
-     {
-         AddBookScreen(navigateToUserDashboard = navigateToUserDashboard  , navigateToAdminDashboard=navigateToAdminDashboard, navigateToRegister = navigateToRegister )
+    {
+        AddBookScreen(navigateToUserDashboard = navigateToUserDashboard  , navigateToAdminDashboard=navigateToAdminDashboard, navigateToRegister = navigateToRegister )
 
 
-     }
- }
+    }
+}
 
 
 @Composable
@@ -82,10 +83,12 @@ fun AddBookScreen(viewModel: AddBookViewModel = viewModel(factory = AppViewModel
         )
 
         TextField(
-            value = bookName, //iz UI state - Books.kt
+            value = bookName,
             onValueChange = { bookName = it; viewModel.updateUiState(detailsState.copy(name = it))  },
             label = { Text("Book Name") },
-            modifier = Modifier.fillMaxWidth().padding(8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         )
 
         TextField(
@@ -93,14 +96,18 @@ fun AddBookScreen(viewModel: AddBookViewModel = viewModel(factory = AppViewModel
             onValueChange = { author = it;
                 viewModel.updateUiState(detailsState.copy(author= it)) },
             label = { Text("Author") },
-            modifier = Modifier.fillMaxWidth().padding(8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         )
 
         TextField(
             value = description,
             onValueChange = { description = it; viewModel.updateUiState(detailsState.copy(description = it))  },
             label = { Text("Description") },
-            modifier = Modifier.fillMaxWidth().padding(8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         )
 
 
@@ -125,12 +132,13 @@ fun AddBookScreen(viewModel: AddBookViewModel = viewModel(factory = AppViewModel
 }
 
 
-/*@Preview(showBackground = true)
+@Preview(showBackground = true)
 @Composable
 fun AddBook() {
     MaterialTheme {
-        AddBookScreen({})
+        //AddBookScreen(navigateToUserDashboard = { /*TODO*/ }, navigateToAdminDashboard ={} ) {
+
+        }
     }
-}
-*/
+
 

@@ -22,7 +22,7 @@ import com.example.myapplication.R
 object AdminDashboardDestination: NavigationDestination {
     override val route = "admin_dashboard"
     override val title = ""
-    //dodati argumente
+
     const val userIdArg = "userID"
     val routeWithArgs = "$route/{$userIdArg}"
 }
@@ -58,7 +58,7 @@ fun AdminDashboard( navigateToAddBook: () -> Unit,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(20.dp)) // Add space between Admin Dashboard and photo
+        Spacer(modifier = Modifier.height(20.dp)) // Adding space between Admin Dashboard and photo
         Text(
             text = "Hello Admin !",
             style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
@@ -68,7 +68,7 @@ fun AdminDashboard( navigateToAddBook: () -> Unit,
             modifier = Modifier
                 .size(150.dp)
                 .clip(CircleShape)
-                .border(5.dp, MyTheme.Purple, CircleShape) // Add a purple border
+                .border(5.dp, MyTheme.Purple, CircleShape) // Adding a purple border
         ) {
             Image(
                 painter = painterResource(id = R.drawable.slika10),
@@ -76,7 +76,7 @@ fun AdminDashboard( navigateToAddBook: () -> Unit,
                 modifier = Modifier.fillMaxSize()
             )
         }
-        Spacer(modifier = Modifier.height(32.dp)) // Add bigger space between photo and buttons
+        Spacer(modifier = Modifier.height(32.dp)) // Adding bigger space between photo and buttons
         Button(
             onClick = { navigateToAddBook() },
             colors = ButtonDefaults.buttonColors(MyTheme.Purple),

@@ -35,17 +35,19 @@ object UserDashboardDestination : NavigationDestination {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun UserDashboardWithTopBar(
-    navigateToRegister: () -> Unit,
+    navigateToAddBook: () -> Unit,
     navigateToProfilePage: (Int) -> Unit,
-    navigateToWelcomePage: () -> Unit
+    navigateToWelcomePage: () -> Unit,
+    navigateToAdminUsersList: () -> Unit
 ) {
     Scaffold(
         topBar = { UserAppBar(titleScreen = UserDashboardDestination.title, canNavigateBack = false) }
     ) {
         UserDashboard(
             navigateToProfilePage = navigateToProfilePage,
-            navigateToRegister = navigateToRegister,
-            navigateToWelcomePage = navigateToWelcomePage
+            navigateToAddBook = navigateToAddBook,
+            navigateToWelcomePage = navigateToWelcomePage,
+                    navigateToAdminUsersList = navigateToAdminUsersList
         )
     }
 }
@@ -95,14 +97,14 @@ fun BookItem(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth()
             ) {
-              if(detailsState.role == 1)  {
-                      Button(
-                          onClick = { showDialog = true },
-                          colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
-                          modifier = Modifier.padding(end = 8.dp)
-                      ) {
-                          Text(text = "EDIT")
-                      }
+                if(detailsState.role == 1)  {
+                    Button(
+                        onClick = { showDialog = true },
+                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
+                        modifier = Modifier.padding(end = 8.dp)
+                    ) {
+                        Text(text = "EDIT")
+                    }
 
                     Button(
                         onClick = { onDeleteClick(book) },
@@ -111,7 +113,7 @@ fun BookItem(
                     ) {
                         Text(text = "DELETE")
                     }
-              }
+                }
             }
         }
     }
@@ -167,10 +169,15 @@ fun EditBookDialog(book: Books, onDismiss: () -> Unit, onUpdateClick: (Books) ->
 fun UserDashboard(
     viewModel: UserHomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navigateToProfilePage: (Int) -> Unit,
-    navigateToRegister: () -> Unit,
-    navigateToWelcomePage: () -> Unit
+    navigateToAddBook: () -> Unit,
+    navigateToWelcomePage: () -> Unit,
+    navigateToAdminUsersList: () -> Unit
 ) {
     val homeUiState by viewModel.homeUiState.collectAsState()
+    val uiState = viewModel.usersUiState
+    val detailsState = uiState.usersDetails
+
+    Log.d("UserDashboard1", detailsState.toString())
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -204,47 +211,51 @@ fun UserDashboard(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Box(
+            if (detailsState.role == 1) {
+            Icon(
+
+                painter = painterResource(id = R.drawable.baseline_assignment_ind_24),
+                contentDescription = "Add Book",
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
-                    .size(60.dp)
-                    .border(2.dp, MaterialTheme.colorScheme.primary)
-                    .padding(8.dp)
-                    .clickable(onClick = navigateToRegister)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_assignment_ind_24),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(40.dp)
-                )
-            }
+                    .size(40.dp)
+                    .clickable(onClick = navigateToAddBook)
+            )}
             Spacer(modifier = Modifier.width(16.dp))
-            Box(
+            Icon(
+                painter = painterResource(id = R.drawable.baseline_logout_24),
+                contentDescription = "Logout",
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
-                    .size(60.dp)
-                    .border(2.dp, MaterialTheme.colorScheme.primary)
-                    .padding(8.dp)
+                    .size(40.dp)
                     .clickable(onClick = navigateToWelcomePage)
-            ) {
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            if (detailsState.role == 1) {
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_logout_24),
-                    contentDescription = null,
+                    contentDescription = "Admin User List",
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(40.dp)
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clickable(onClick = navigateToAdminUsersList)
                 )
             }
         }
     }
 }
 
+
+
 @Preview(showBackground = true)
 @Composable
 fun UserDashboardPreview() {
     MaterialTheme {
         UserDashboardWithTopBar(
-            navigateToRegister = {},
+            navigateToAddBook = {},
             navigateToProfilePage = {},
-            navigateToWelcomePage = {}
+            navigateToWelcomePage = {},
+            navigateToAdminUsersList = {}
         )
     }
 }

@@ -30,11 +30,11 @@ class AdminUsersListViewModel(private val userRepository: UserRepository) : View
             userRepository.delete(user)
         }
     }
-  /*  fun updateUser(user: Users) {
-        viewModelScope.launch {
-            userRepository.update(user)
-        } */
-    }
+    /*  fun updateUser(user: Users) {
+          viewModelScope.launch {
+              userRepository.update(user)
+          } */
+}
 
 
 data class HomeUIStateUsers(val userList: List<Users> = listOf())

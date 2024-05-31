@@ -26,13 +26,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             APPLICATIONTheme {
-                // A surface container using the 'background' color from the theme
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                  MyApp()
-                 //UserNavHost(navController = rememberNavController())
+                    //MyApp()
+                    UserNavHost(navController = rememberNavController())
 
                 }
             }
@@ -42,9 +42,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MyApp() {
-    AdminDashboard({}, {}, {})
+    //AddBook()
 
 }
-
 
 

@@ -33,15 +33,14 @@ class UserHomeViewModel(private val bookRepository: BookRepository, savedStateHa
         private set
 
 
-    init {// da se kreira svaki put kad se pozove taj viewModel
-        //funkcija za kreiranje box
+    init {
         viewModelScope.launch {
             bookRepository.getBooks().collect { books ->
                 _homeUiState.value = HomeUiState(books)
             } }}
-        init { //isto se poziva svaki put kad s epoziva taj viewmodel, ali sad ce pozvait i usera preko ID
-                viewModelScope.launch {
-             usersUiState = userRepository.getOneStream(userId)
+    init {
+        viewModelScope.launch {
+            usersUiState = userRepository.getOneStream(userId)
                 .filterNotNull()
                 .first()
                 .toUserUiState(true)

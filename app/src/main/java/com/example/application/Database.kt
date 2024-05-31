@@ -20,7 +20,7 @@ abstract class BookDatabase: RoomDatabase() {
         private var Instance: BookDatabase? = null
 
         fun getDatabase(context: Context): BookDatabase {
-            // if the Instance is not null, return it, otherwise create a new database instance.
+
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context, BookDatabase::class.java, "BookAPPDatabase")
                     .fallbackToDestructiveMigration()

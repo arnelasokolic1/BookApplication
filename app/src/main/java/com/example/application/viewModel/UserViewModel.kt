@@ -28,8 +28,7 @@ class UserViewModel(private val userRepository: UserRepository, savedStateHandle
         checkNotNull(savedStateHandle[ProfileDestination.userIdArg])
 
     init {
-        viewModelScope.launch { /* kad pozivamo nase funkcije iz baze, kad se suspend ufnkcija poziva u viewModleu onda se koristi
-         viewModelScope*/
+        viewModelScope.launch { 
             usersUiState = userRepository.getOneStream(studentId)
                 .filterNotNull()
                 .first()

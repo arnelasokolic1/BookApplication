@@ -130,7 +130,7 @@ fun ProfileScreen(
             modifier = Modifier
                 .size(150.dp)
                 .clip(CircleShape)
-                .border(5.dp, MyTheme.Purple, CircleShape) // Add a purple border
+                .border(5.dp, MyTheme.Purple, CircleShape) // Adding a purple border
         ) {
             Image(
                 painter = painterResource(id = R.drawable.slika10),

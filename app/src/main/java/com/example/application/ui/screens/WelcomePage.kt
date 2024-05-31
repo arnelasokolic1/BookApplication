@@ -64,7 +64,7 @@ fun WelcomePage(navigateToLogin: () -> Unit,
         Box(
             modifier = Modifier
                 .padding(vertical = 16.dp)
-                .padding(10.dp), // Add padding to create a frame effect
+                .padding(10.dp), // Adding padding to create a frame effect
             contentAlignment = Alignment.Center
         ) {
             // Adding a circular frame around the image
@@ -95,7 +95,7 @@ fun WelcomePage(navigateToLogin: () -> Unit,
         )
         Button(
             onClick = { navigateToLogin()},
-            colors = ButtonDefaults.buttonColors(MyTheme.Purple), // Use the custom pink color
+            colors = ButtonDefaults.buttonColors(MyTheme.Purple),
             modifier = Modifier.padding(vertical = 16.dp)
         ) {
             Text(text = "Start Reading", color = Color.White)

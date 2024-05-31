@@ -132,7 +132,6 @@ fun RegisterScreen(
                 coroutineScope.launch {
                     if (viewModel.register()) {
                         Log.d("register", viewModel.usersUiState.toString())
-                        /*profileViewModel.updateUserData(name, surname, email) */
                         navigateToProfilePage(viewModel.usersUiState.usersDetails.id)
                     }
                 }
