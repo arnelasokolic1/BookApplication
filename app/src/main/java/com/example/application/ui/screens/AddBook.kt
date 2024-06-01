@@ -1,7 +1,9 @@
 package com.example.application
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -11,6 +13,8 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -66,9 +70,22 @@ fun AddBookScreen(viewModel: AddBookViewModel = viewModel(factory = AppViewModel
     val coroutineScope = rememberCoroutineScope()
     var uiState = viewModel.booksUiState
     var detailsState = uiState.booksDetails
+    val GradientColors = listOf(Color(0xFF1E3A8A), Color(0xFF755A90))
+
 
     //val homeUiState by viewModel.bookUiState.collectAsState() - za prikazivanje
-
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = MyTheme.GradientColors,
+                    startY = 0f,
+                    endY = 1000f
+                )
+            )
+            .padding(16.dp)
+    )
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -124,7 +141,10 @@ fun AddBookScreen(viewModel: AddBookViewModel = viewModel(factory = AppViewModel
         Button(
             onClick = { coroutineScope.launch{viewModel.register()} },
             colors = ButtonDefaults.buttonColors(MyTheme.Purple),
-            modifier = Modifier.padding(vertical = 16.dp)
+            shape = RoundedCornerShape(50),
+            modifier = Modifier
+                .padding(vertical = 16.dp)
+                .shadow(8.dp, RoundedCornerShape(50))
         ) {
             Text(text = "Add Book", color = Color.White)
         }
