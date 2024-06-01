@@ -20,7 +20,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,8 +36,12 @@ object MyTheme {
 
     val DarkBlue = Color(0xFF1E3A8A)
     val Purple = Color(0xFF755A90) // Purple color
-    val LightPurple = Color(0xFFA699B3)
+    val LightPurple = Color(0xFFC7B7D6)
     val GradientColors = listOf(Color(0xFF1E3A8A), Color(0xFF755A90))
+    val Blue = Color(0xFF39448A)
+    val Red1 = Color(0xFFB0261A)
+
+
 }
 
 
@@ -88,24 +94,31 @@ fun WelcomePage(navigateToLogin: () -> Unit,
             // Adding a circular frame around the image
             Box(
                 modifier = Modifier
-                    .size(250.dp)
+                    .size(255.dp)
                     .clip(shape = CircleShape)
-                    .border(5.dp, MyTheme.LightPurple, shape = CircleShape) // Purple border
+                    .border(8.dp, MyTheme.LightPurple, shape = CircleShape)
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.book5),
                     contentDescription = "First photo",
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+
+
+
                 )
             }
         }
         // Adding text with a different font and blue color
         Text(
-            text = "Welcome to BookLore",
+            text = "Welcome to BookApp",
             color = Color.White,
-            style = MaterialTheme.typography.headlineMedium.copy(
+            style = MaterialTheme.typography.headlineLarge.copy(
                 fontWeight = FontWeight.Bold,
-                fontSize = 28.sp
+                fontSize = 32.sp,
+                letterSpacing = 0.15.sp,
+                lineHeight = 38.sp,
+                fontFamily = FontFamily.Serif
             ),
             modifier = Modifier.padding(vertical = 8.dp)
         )
@@ -117,7 +130,7 @@ fun WelcomePage(navigateToLogin: () -> Unit,
         )
         Button(
             onClick = { navigateToLogin()},
-            colors = ButtonDefaults.buttonColors(MyTheme.Purple),
+            colors = ButtonDefaults.buttonColors(MyTheme.Blue),
             shape = RoundedCornerShape(50),
             modifier = Modifier
                 .padding(vertical = 16.dp)

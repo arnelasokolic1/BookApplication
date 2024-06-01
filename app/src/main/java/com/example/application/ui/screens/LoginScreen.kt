@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -111,12 +112,12 @@ fun LoginScreen(viewModel: LoginRegistrationViewModel = viewModel(factory = AppV
                 modifier = Modifier
                     .size(150.dp)
                     .clip(CircleShape) // Making the image circular
-                    .border(5.dp, MyTheme.LightPurple, CircleShape)
+                    .border(8.dp, MyTheme.LightPurple, CircleShape)
             ) {
                 // image
                 Image(
                     painter = painterResource(id = R.drawable.slika8),
-                    contentDescription = "Your Image",
+                    contentDescription = "Image",
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
@@ -126,8 +127,9 @@ fun LoginScreen(viewModel: LoginRegistrationViewModel = viewModel(factory = AppV
         Text(
             text = "Welcome back, Login!", color = Color.White,
             style = MaterialTheme.typography.bodyLarge
-                .copy(fontSize = 30.sp, fontWeight = FontWeight.Bold), // Bold and fontSize 28.sp
-            modifier = Modifier.padding(bottom = 18.dp)
+                .copy(fontSize = 27.sp, fontWeight = FontWeight.Bold), // Bold and fontSize 28.sp
+            modifier = Modifier.padding(bottom = 18.dp),
+                    fontFamily = FontFamily.Serif
         )
         Spacer(modifier = Modifier.height(16.dp)) // Adding space between fields
         TextField(
@@ -172,7 +174,7 @@ fun LoginScreen(viewModel: LoginRegistrationViewModel = viewModel(factory = AppV
                     }
                 }
             },
-            colors = ButtonDefaults.buttonColors(containerColor = MyTheme.Purple), // Use the custom pink color
+            colors = ButtonDefaults.buttonColors(containerColor = MyTheme.Blue), // Use the custom pink color
             modifier = Modifier
                 .padding(vertical = 16.dp)
                 .shadow(8.dp, RoundedCornerShape(50)),

@@ -108,13 +108,13 @@ fun UserItem(
                 }
                 Button(
                     onClick = { onDeleteClick(user) },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF755A90)),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
                     modifier = Modifier
                         .padding(vertical = 0.dp)
                         .shadow(15.dp, RoundedCornerShape(50)),
                     shape = RoundedCornerShape(50)
                 ) {
-                    Text(text = "REGISTER", color = Color.White)
+                    Text(text = "DELETE", color = Color.White)
                 }
 
 
@@ -122,7 +122,6 @@ fun UserItem(
             }
         }
     }
-
 
 @Composable
 fun AdminUsersList(
@@ -158,16 +157,19 @@ fun AdminUsersList(
         )
 
         Spacer(modifier = Modifier.height(1.dp))
-        LazyColumn(
-            modifier = Modifier.fillMaxHeight(),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
-        ) {
-            items(homeUiState.userList) { user ->
-                UserItem(
-                    user,
-                    onEditClick = { /* Handle edit click here */ },
-                    onDeleteClick = { viewModel.deleteUser(it) }
-                )
+        // Add padding to push the user list down
+        Column(modifier = Modifier.padding(top = 16.dp)) {
+            LazyColumn(
+                modifier = Modifier.fillMaxHeight(),
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                items(homeUiState.userList) { user ->
+                    UserItem(
+                        user,
+                        onEditClick = { /* Handle edit click here */ },
+                        onDeleteClick = { viewModel.deleteUser(it) }
+                    )
+                }
             }
         }
     }

@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -87,8 +88,9 @@ fun RegisterScreen(
     ) {
         Text(
             text = "Welcome, Register!", color = Color.White,
-            style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold, fontSize = 30.sp),
-            modifier = Modifier.padding(bottom = 36.dp)
+            style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold, fontSize = 27.sp),
+            modifier = Modifier.padding(bottom = 36.dp) ,
+                    fontFamily = FontFamily.Serif
         )
         Spacer(modifier = Modifier.height(18.dp))
         TextField(
@@ -154,7 +156,7 @@ fun RegisterScreen(
                     }
                 }
             },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF755A90)),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF394289)),
             modifier = Modifier
                 .padding(vertical = 16.dp)
                 .shadow(8.dp, RoundedCornerShape(50)),

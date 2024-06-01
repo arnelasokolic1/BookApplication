@@ -73,7 +73,7 @@ fun AddBookScreen(viewModel: AddBookViewModel = viewModel(factory = AppViewModel
     val GradientColors = listOf(Color(0xFF1E3A8A), Color(0xFF755A90))
 
 
-    //val homeUiState by viewModel.bookUiState.collectAsState() - za prikazivanje
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -140,13 +140,13 @@ fun AddBookScreen(viewModel: AddBookViewModel = viewModel(factory = AppViewModel
 
         Button(
             onClick = { coroutineScope.launch{viewModel.register()} },
-            colors = ButtonDefaults.buttonColors(MyTheme.Purple),
+            colors = ButtonDefaults.buttonColors(MyTheme.Blue ),
             shape = RoundedCornerShape(50),
             modifier = Modifier
                 .padding(vertical = 16.dp)
                 .shadow(8.dp, RoundedCornerShape(50))
         ) {
-            Text(text = "Add Book", color = Color.White)
+            Text(text = "ADD BOOK", color = Color.White)
         }
     }
 }

@@ -26,7 +26,6 @@ import com.example.application.ui.screens.navigation.NavigationDestination
 import com.example.application.ui.screens.navigation.UserAppBar
 import com.example.application.viewModel.AppViewModelProvider
 import com.example.application.viewModel.UserHomeViewModel
-import com.example.application.viewModel.UserViewModel
 import com.example.myapplication.R
 
 object UserDashboardDestination : NavigationDestination {
@@ -36,7 +35,6 @@ object UserDashboardDestination : NavigationDestination {
     val routeWithArgs = "$route/{$userIdArg}"
     val GradientColors = listOf(Color(0xFF1E3A8A), Color(0xFF755A90))
 }
-
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -51,7 +49,7 @@ fun UserDashboardWithTopBar(
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = MyTheme.GradientColors,
+                    colors = UserDashboardDestination.GradientColors,
                     startY = 0f,
                     endY = 1000f
                 )
@@ -65,7 +63,7 @@ fun UserDashboardWithTopBar(
             navigateToProfilePage = navigateToProfilePage,
             navigateToAddBook = navigateToAddBook,
             navigateToWelcomePage = navigateToWelcomePage,
-                    navigateToAdminUsersList = navigateToAdminUsersList
+            navigateToAdminUsersList = navigateToAdminUsersList
         )
     }
 }
@@ -78,7 +76,7 @@ fun BookItem(
     val uiState = viewModel.usersUiState
     val detailsState = uiState.usersDetails
 
-    Log.d("UserDashboard1",detailsState.toString())
+    Log.d("UserDashboard1", detailsState.toString())
 
     var showDialog by remember { mutableStateOf(false) }
 
@@ -89,7 +87,8 @@ fun BookItem(
     Card(
         modifier = Modifier
             .padding(6.dp)
-            .width(310.dp),
+            .width(310.dp)
+            .shadow(8.dp, RoundedCornerShape(8.dp)) // Adding shadow here
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -117,10 +116,10 @@ fun BookItem(
                     .padding(6.dp)
                     .width(310.dp),
             ) {
-                if(detailsState.role == 1)  {
+                if (detailsState.role == 1) {
                     Button(
                         onClick = { showDialog = true },
-                        colors = ButtonDefaults.buttonColors(MyTheme.Purple),
+                        colors = ButtonDefaults.buttonColors(MyTheme.Blue),
                         shape = RoundedCornerShape(50),
                         modifier = Modifier
                             .padding(vertical = 0.dp)
@@ -142,24 +141,13 @@ fun BookItem(
     }
 }
 
+
 @Composable
 fun EditBookDialog(book: Books, onDismiss: () -> Unit, onUpdateClick: (Books) -> Unit) {
     var title by remember { mutableStateOf(book.name) }
     var author by remember { mutableStateOf(book.author) }
     var description by remember { mutableStateOf(book.description) }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = MyTheme.GradientColors,
-                    startY = 0f,
-                    endY = 1000f
-                )
-            )
-            .padding(16.dp)
-    )
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
@@ -167,12 +155,12 @@ fun EditBookDialog(book: Books, onDismiss: () -> Unit, onUpdateClick: (Books) ->
                 onUpdateClick(book.copy(name = title, author = author, description = description))
                 onDismiss()
             }) {
-                Text("Save")
+                Text("Save", color = MyTheme.Purple)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text("Cancel", color = MyTheme.Red1)
             }
         },
         title = { Text(text = "Edit Book") },
@@ -196,7 +184,11 @@ fun EditBookDialog(book: Books, onDismiss: () -> Unit, onUpdateClick: (Books) ->
                     label = { Text("Description") }
                 )
             }
-        }
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(Alignment.CenterHorizontally)
+            .wrapContentHeight(Alignment.CenterVertically)
     )
 }
 
@@ -217,7 +209,7 @@ fun UserDashboard(
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = MyTheme.GradientColors,
+                    colors = UserDashboardDestination.GradientColors,
                     startY = 0f,
                     endY = 1000f
                 )
@@ -233,6 +225,7 @@ fun UserDashboard(
     ) {
         Spacer(modifier = Modifier.height(20.dp))
         Text(
+
             text = "Books",
             style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.padding(bottom = 50.dp)
@@ -253,47 +246,52 @@ fun UserDashboard(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = MyTheme.Blue, shape = RoundedCornerShape(0.dp))
+                .border(width = 5.dp, color = MyTheme.LightPurple, shape = RoundedCornerShape(0.dp))
+                .padding(16.dp)
         ) {
-            if (detailsState.role == 1) {
-            Icon(
-
-                painter = painterResource(id = R.drawable.baseline_assignment_ind_24),
-                contentDescription = "Add Book",
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .size(40.dp)
-                    .clickable(onClick = navigateToAddBook)
-            )}
-            Spacer(modifier = Modifier.width(16.dp))
-            Icon(
-                painter = painterResource(id = R.drawable.baseline_logout_24),
-                contentDescription = "Logout",
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .size(40.dp)
-                    .clickable(onClick = navigateToWelcomePage)
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            if (detailsState.role == 1) {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                if (detailsState.role == 1) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_add_to_photos_24),
+                        contentDescription = "Add Book",
+                        tint = Color.White,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clickable(onClick = navigateToAddBook)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                }
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_logout_24),
-                    contentDescription = "Admin User List",
-                    tint = MaterialTheme.colorScheme.primary,
+                    contentDescription = "Logout",
+                    tint = Color.White,
                     modifier = Modifier
                         .size(40.dp)
-                        .clickable(onClick = navigateToAdminUsersList)
-
+                        .clickable(onClick = navigateToWelcomePage)
                 )
+                Spacer(modifier = Modifier.width(16.dp))
+                if (detailsState.role == 1) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_format_list_bulleted_24),
+                        contentDescription = "Admin User List",
+                        tint = Color.White,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clickable(onClick = navigateToAdminUsersList)
+                    )
+                }
             }
         }
     }
 }
-
-
 
 @Preview(showBackground = true)
 @Composable
