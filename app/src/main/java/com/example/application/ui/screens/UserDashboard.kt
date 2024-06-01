@@ -6,6 +6,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+//import androidx.compose.foundation.layout.FlowRowScopeInstance.align
+//import androidx.compose.foundation.layout.ColumnScopeInstance.align
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -231,7 +233,6 @@ fun DeleteBookDialog(book: Books, onDismiss: () -> Unit, onConfirm: () -> Unit) 
     )
 }
 
-
 @Composable
 fun UserDashboard(
     viewModel: UserHomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
@@ -285,8 +286,7 @@ fun UserDashboard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .border(width = 5.dp, color = MyTheme.LightPurple, shape
-                    = RoundedCornerShape(0.dp))
+                    .border(width = 5.dp, color = MyTheme.LightPurple, shape = RoundedCornerShape(0.dp))
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -328,12 +328,14 @@ fun UserDashboard(
                     }
                     item {
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = "That is all that we have:)",
-                            color = Color.White,
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.padding(vertical = 16.dp)
-                        )
+                        if (detailsState.role == 0) { // Show this text only to users (role 0)
+                            Text(
+                                text = "That is all that we have:)",
+                                color = Color.White,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(vertical = 16.dp)
+                            )
+                        }
                     }
                 }
             }
@@ -353,7 +355,7 @@ fun UserDashboard(
                     containerColor = MyTheme.Blue,
                     action = {
                         TextButton(onClick = { showNotification = false }) {
-                            Text("Dismiss", color = Color.White)
+                            Text("Close", color = Color.White)
                         }
                     }
                 ) {
