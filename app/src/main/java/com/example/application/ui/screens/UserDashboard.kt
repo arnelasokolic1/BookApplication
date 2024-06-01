@@ -2,15 +2,20 @@ package com.example.application.ui.screens
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,6 +34,7 @@ object UserDashboardDestination : NavigationDestination {
     override val title = "User Dashboard"
     const val userIdArg = "userID"
     val routeWithArgs = "$route/{$userIdArg}"
+    val GradientColors = listOf(Color(0xFF1E3A8A), Color(0xFF755A90))
 }
 
 
@@ -40,6 +46,18 @@ fun UserDashboardWithTopBar(
     navigateToWelcomePage: () -> Unit,
     navigateToAdminUsersList: () -> Unit
 ) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = MyTheme.GradientColors,
+                    startY = 0f,
+                    endY = 1000f
+                )
+            )
+            .padding(16.dp)
+    )
     Scaffold(
         topBar = { UserAppBar(titleScreen = UserDashboardDestination.title, canNavigateBack = false) }
     ) {
@@ -70,8 +88,8 @@ fun BookItem(
 
     Card(
         modifier = Modifier
-            .padding(8.dp)
-            .width(350.dp)
+            .padding(6.dp)
+            .width(310.dp),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -95,13 +113,18 @@ fun BookItem(
             Spacer(modifier = Modifier.height(16.dp))
             Row(
                 horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .padding(6.dp)
+                    .width(310.dp),
             ) {
                 if(detailsState.role == 1)  {
                     Button(
                         onClick = { showDialog = true },
-                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
-                        modifier = Modifier.padding(end = 8.dp)
+                        colors = ButtonDefaults.buttonColors(MyTheme.Purple),
+                        shape = RoundedCornerShape(50),
+                        modifier = Modifier
+                            .padding(vertical = 0.dp)
+                            .shadow(8.dp, RoundedCornerShape(50))
                     ) {
                         Text(text = "EDIT")
                     }
@@ -125,6 +148,18 @@ fun EditBookDialog(book: Books, onDismiss: () -> Unit, onUpdateClick: (Books) ->
     var author by remember { mutableStateOf(book.author) }
     var description by remember { mutableStateOf(book.description) }
 
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = MyTheme.GradientColors,
+                    startY = 0f,
+                    endY = 1000f
+                )
+            )
+            .padding(16.dp)
+    )
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
@@ -176,7 +211,19 @@ fun UserDashboard(
     val homeUiState by viewModel.homeUiState.collectAsState()
     val uiState = viewModel.usersUiState
     val detailsState = uiState.usersDetails
-
+    val GradientColors = listOf(Color(0xFF1E3A8A), Color(0xFF755A90))
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = MyTheme.GradientColors,
+                    startY = 0f,
+                    endY = 1000f
+                )
+            )
+            .padding(16.dp)
+    )
     Log.d("UserDashboard1", detailsState.toString())
 
     Column(
@@ -239,6 +286,7 @@ fun UserDashboard(
                     modifier = Modifier
                         .size(40.dp)
                         .clickable(onClick = navigateToAdminUsersList)
+
                 )
             }
         }

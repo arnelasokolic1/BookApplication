@@ -1,17 +1,22 @@
 package com.example.application.ui.screens
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 //import androidx.compose.foundation.layout.FlowRowScopeInstance.align
 //import androidx.compose.foundation.layout.ColumnScopeInstance.align
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,6 +32,8 @@ import com.example.myapplication.R
 object AdminUsersListDestination: NavigationDestination {
     override val route = "admin_users_list"
     override val title = "Admin Users list"
+    val GradientColors = listOf(Color(0xFF1E3A8A), Color(0xFF755A90))
+
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -35,6 +42,18 @@ fun AdminUsersListWithTopBar(
     navigateToUserDashboard: () -> Unit,
     navigateBack: () -> Unit
 ){
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = MyTheme.GradientColors,
+                    startY = 0f,
+                    endY = 1000f
+                )
+            )
+            .padding(16.dp)
+    )
     Scaffold(
         topBar = { UserAppBar(titleScreen = AdminUsersListDestination.title, canNavigateBack = true, navigateBack = navigateBack) }
     ) {
@@ -49,9 +68,11 @@ fun UserItem(
     onDeleteClick: (Users) -> Unit
 ) {
     Card(
+
         modifier = Modifier
-            .padding(8.dp)
-            .width(350.dp),
+            .padding(6.dp)
+            .width(310.dp),
+
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -87,10 +108,13 @@ fun UserItem(
                 }
                 Button(
                     onClick = { onDeleteClick(user) },
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
-                    modifier = Modifier.padding(start = 8.dp)
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF755A90)),
+                    modifier = Modifier
+                        .padding(vertical = 0.dp)
+                        .shadow(15.dp, RoundedCornerShape(50)),
+                    shape = RoundedCornerShape(50)
                 ) {
-                    Text(text = "DELETE")
+                    Text(text = "REGISTER", color = Color.White)
                 }
 
 
@@ -108,6 +132,18 @@ fun AdminUsersList(
 ) {
     val homeUiState by viewModel.homeUiState.collectAsState()
 
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = MyTheme.GradientColors,
+                    startY = 0f,
+                    endY = 1000f
+                )
+            )
+            .padding(16.dp)
+    )
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,

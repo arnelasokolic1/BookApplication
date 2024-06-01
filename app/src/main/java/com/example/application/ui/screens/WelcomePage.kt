@@ -3,9 +3,11 @@ package com.example.application.ui.screens
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -15,11 +17,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.application.ui.screens.navigation.NavigationDestination
 import com.example.application.ui.screens.navigation.UserAppBar
 import com.example.myapplication.R
@@ -30,6 +35,7 @@ object MyTheme {
     val DarkBlue = Color(0xFF1E3A8A)
     val Purple = Color(0xFF755A90) // Purple color
     val LightPurple = Color(0xFFA699B3)
+    val GradientColors = listOf(Color(0xFF1E3A8A), Color(0xFF755A90))
 }
 
 
@@ -56,6 +62,18 @@ fun WelcomePageWithTopBar(
 @Composable
 fun WelcomePage(navigateToLogin: () -> Unit,
                 modifier: Modifier = Modifier) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = MyTheme.GradientColors,
+                    startY = 0f,
+                    endY = 1000f
+                )
+            )
+            .padding(16.dp)
+    ) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -84,25 +102,32 @@ fun WelcomePage(navigateToLogin: () -> Unit,
         // Adding text with a different font and blue color
         Text(
             text = "Welcome to BookLore",
-            color = Color.Black,
-            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold), // Make the text bold
-            modifier = Modifier.padding(vertical = 16.dp)
+            color = Color.White,
+            style = MaterialTheme.typography.headlineMedium.copy(
+                fontWeight = FontWeight.Bold,
+                fontSize = 28.sp
+            ),
+            modifier = Modifier.padding(vertical = 8.dp)
         )
         Text(
             text = "Unlock the World of Books",
-            color = Color.Gray,
-            modifier = Modifier.padding(vertical = 5.dp)
+            color = Color.LightGray,
+            style = MaterialTheme.typography.bodyLarge.copy(fontSize = 18.sp),
+            modifier = Modifier.padding(vertical = 4.dp)
         )
         Button(
             onClick = { navigateToLogin()},
             colors = ButtonDefaults.buttonColors(MyTheme.Purple),
-            modifier = Modifier.padding(vertical = 16.dp)
+            shape = RoundedCornerShape(50),
+            modifier = Modifier
+                .padding(vertical = 16.dp)
+                .shadow(8.dp, RoundedCornerShape(50))
         ) {
             Text(text = "Start Reading", color = Color.White)
         }
 
     }
-}
+}}
 
 @Preview(showBackground = true)
 @Composable
