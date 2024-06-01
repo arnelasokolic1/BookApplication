@@ -27,6 +27,8 @@ import com.example.application.ui.screens.navigation.UserAppBar
 import com.example.application.viewModel.AppViewModelProvider
 import com.example.application.viewModel.UserHomeViewModel
 import com.example.myapplication.R
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 object UserDashboardDestination : NavigationDestination {
     override val route = "userdashboard"
@@ -54,7 +56,6 @@ fun UserDashboardWithTopBar(
                     endY = 1000f
                 )
             )
-            .padding(16.dp)
     )
     Scaffold(
         topBar = { UserAppBar(titleScreen = UserDashboardDestination.title, canNavigateBack = false) }
@@ -78,17 +79,26 @@ fun BookItem(
 
     Log.d("UserDashboard1", detailsState.toString())
 
-    var showDialog by remember { mutableStateOf(false) }
+    var showEditDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
-    if (showDialog) {
-        EditBookDialog(book = book, onDismiss = { showDialog = false }, onUpdateClick = onUpdateClick)
+    if (showEditDialog) {
+        EditBookDialog(book = book, onDismiss = { showEditDialog = false }, onUpdateClick = {
+            onUpdateClick(it)
+        })
+    }
+
+    if (showDeleteDialog) {
+        DeleteBookDialog(book = book, onDismiss = { showDeleteDialog = false }, onConfirm = {
+            onDeleteClick(book)
+        })
     }
 
     Card(
         modifier = Modifier
             .padding(6.dp)
-            .width(310.dp)
-            .shadow(8.dp, RoundedCornerShape(8.dp)) // Adding shadow here
+            .fillMaxWidth()
+            .shadow(8.dp, RoundedCornerShape(8.dp))
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -114,11 +124,13 @@ fun BookItem(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .padding(6.dp)
-                    .width(310.dp),
+                    .fillMaxWidth(),
             ) {
                 if (detailsState.role == 1) {
                     Button(
-                        onClick = { showDialog = true },
+                        onClick = {
+                            showEditDialog = true
+                        },
                         colors = ButtonDefaults.buttonColors(MyTheme.Blue),
                         shape = RoundedCornerShape(50),
                         modifier = Modifier
@@ -129,7 +141,9 @@ fun BookItem(
                     }
 
                     Button(
-                        onClick = { onDeleteClick(book) },
+                        onClick = {
+                            showDeleteDialog = true
+                        },
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
                         modifier = Modifier.padding(start = 8.dp)
                     ) {
@@ -140,7 +154,6 @@ fun BookItem(
         }
     }
 }
-
 
 @Composable
 fun EditBookDialog(book: Books, onDismiss: () -> Unit, onUpdateClick: (Books) -> Unit) {
@@ -193,6 +206,33 @@ fun EditBookDialog(book: Books, onDismiss: () -> Unit, onUpdateClick: (Books) ->
 }
 
 @Composable
+fun DeleteBookDialog(book: Books, onDismiss: () -> Unit, onConfirm: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(onClick = {
+                onConfirm()
+                onDismiss()
+            }) {
+                Text("Yes", color = MyTheme.Purple)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("No", color = MyTheme.Red1)
+            }
+        },
+        title = { Text(text = "Delete Book") },
+        text = { Text("Are you sure you want to delete ${book.name}?") },
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(Alignment.CenterHorizontally)
+            .wrapContentHeight(Alignment.CenterVertically)
+    )
+}
+
+
+@Composable
 fun UserDashboard(
     viewModel: UserHomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navigateToProfilePage: (Int) -> Unit,
@@ -203,7 +243,17 @@ fun UserDashboard(
     val homeUiState by viewModel.homeUiState.collectAsState()
     val uiState = viewModel.usersUiState
     val detailsState = uiState.usersDetails
-    val GradientColors = listOf(Color(0xFF1E3A8A), Color(0xFF755A90))
+    var searchQuery by remember { mutableStateOf("") }
+    var showNotification by remember { mutableStateOf(false) }
+    var notificationMessage by remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
+
+    val filteredBooks = homeUiState.bookList.filter {
+        it.name.contains(searchQuery, ignoreCase = true) ||
+                it.author.contains(searchQuery, ignoreCase = true) ||
+                it.description.contains(searchQuery, ignoreCase = true)
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -214,79 +264,152 @@ fun UserDashboard(
                     endY = 1000f
                 )
             )
-            .padding(16.dp)
-    )
-    Log.d("UserDashboard1", detailsState.toString())
-
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(20.dp))
-        Text(
+        Log.d("UserDashboard1", detailsState.toString())
 
-            text = "Books",
-            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-            modifier = Modifier.padding(bottom = 50.dp)
-        )
-
-        Spacer(modifier = Modifier.height(1.dp))
-        LazyColumn(
-            modifier = Modifier.weight(1f),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            items(homeUiState.bookList) { book ->
-                BookItem(
-                    book = book,
-                    onDeleteClick = { bookToDelete -> viewModel.deleteBook(bookToDelete) },
-                    onUpdateClick = { bookToUpdate -> viewModel.updateBook(bookToUpdate) }
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(
+                text = "Books",
+                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                modifier = Modifier.padding(bottom = 50.dp)
+            )
+
+            TextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                label = { Text("Search Books") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .border(width = 5.dp, color = MyTheme.LightPurple, shape
+                    = RoundedCornerShape(0.dp))
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            if (filteredBooks.isEmpty()) {
+                Text(
+                    text = "No books found",
+                    color = Color.White,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(top = 16.dp)
                 )
+            } else {
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                ) {
+                    items(filteredBooks) { book ->
+                        BookItem(
+                            book = book,
+                            onDeleteClick = { bookToDelete ->
+                                viewModel.deleteBook(bookToDelete)
+                                notificationMessage = "${bookToDelete.name} is deleted successfully"
+                                showNotification = true
+                                coroutineScope.launch {
+                                    delay(3000)
+                                    showNotification = false
+                                }
+                            },
+                            onUpdateClick = { bookToUpdate ->
+                                viewModel.updateBook(bookToUpdate)
+                                notificationMessage = "${bookToUpdate.name} is edited successfully"
+                                showNotification = true
+                                coroutineScope.launch {
+                                    delay(3000)
+                                    showNotification = false
+                                }
+                            }
+                        )
+                    }
+                    item {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "That is all that we have:)",
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(vertical = 16.dp)
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        if (showNotification) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 100.dp), // Adjusted to be higher
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                Snackbar(
+                    modifier = Modifier.padding(16.dp),
+                    containerColor = MyTheme.Blue,
+                    action = {
+                        TextButton(onClick = { showNotification = false }) {
+                            Text("Dismiss", color = Color.White)
+                        }
+                    }
+                ) {
+                    Text(notificationMessage)
+                }
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-        Box(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(color = MyTheme.Blue, shape = RoundedCornerShape(0.dp))
-                .border(width = 5.dp, color = MyTheme.LightPurple, shape = RoundedCornerShape(0.dp))
-                .padding(16.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = MyTheme.Blue, shape = RoundedCornerShape(0.dp))
+                    .border(width = 5.dp, color = MyTheme.LightPurple, shape = RoundedCornerShape(0.dp))
+                    .padding(16.dp)
             ) {
-                if (detailsState.role == 1) {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    if (detailsState.role == 1) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_add_to_photos_24),
+                            contentDescription = "Add Book",
+                            tint = Color.White,
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clickable(onClick = navigateToAddBook)
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                    }
                     Icon(
-                        painter = painterResource(id = R.drawable.baseline_add_to_photos_24),
-                        contentDescription = "Add Book",
+                        painter = painterResource(id = R.drawable.baseline_logout_24),
+                        contentDescription = "Logout",
                         tint = Color.White,
                         modifier = Modifier
                             .size(40.dp)
-                            .clickable(onClick = navigateToAddBook)
+                            .clickable(onClick = navigateToWelcomePage)
                     )
                     Spacer(modifier = Modifier.width(16.dp))
-                }
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_logout_24),
-                    contentDescription = "Logout",
-                    tint = Color.White,
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clickable(onClick = navigateToWelcomePage)
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                if (detailsState.role == 1) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.baseline_format_list_bulleted_24),
-                        contentDescription = "Admin User List",
-                        tint = Color.White,
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clickable(onClick = navigateToAdminUsersList)
-                    )
+                    if (detailsState.role == 1) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_format_list_bulleted_24),
+                            contentDescription = "Admin User List",
+                            tint = Color.White,
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clickable(onClick = navigateToAdminUsersList)
+                        )
+                    }
                 }
             }
         }
