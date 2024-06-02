@@ -68,7 +68,8 @@ fun UserItem(
     Card(
         modifier = Modifier
             .padding(6.dp)
-            .width(310.dp),
+            .width(310.dp)
+            .shadow(8.dp, RoundedCornerShape(8.dp)), // Added shadow with RoundedCornerShape
     ) {
         Column(
             modifier = Modifier.padding(16.dp),

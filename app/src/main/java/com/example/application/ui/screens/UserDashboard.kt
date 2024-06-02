@@ -46,6 +46,7 @@ fun UserDashboardWithTopBar(
     navigateToWelcomePage: () -> Unit,
     navigateToAdminUsersList: () -> Unit
 ) {
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -56,16 +57,22 @@ fun UserDashboardWithTopBar(
                     endY = 1000f
                 )
             )
-    )
-    Scaffold(
-        topBar = { UserAppBar(titleScreen = UserDashboardDestination.title, canNavigateBack = false) }
     ) {
-        UserDashboard(
-            navigateToProfilePage = navigateToProfilePage,
-            navigateToAddBook = navigateToAddBook,
-            navigateToWelcomePage = navigateToWelcomePage,
-            navigateToAdminUsersList = navigateToAdminUsersList
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = MyTheme.Purple)
         )
+        Scaffold(
+            topBar = { UserAppBar(titleScreen = UserDashboardDestination.title, canNavigateBack = false) }
+        ) {
+            UserDashboard(
+                navigateToProfilePage = navigateToProfilePage,
+                navigateToAddBook = navigateToAddBook,
+                navigateToWelcomePage = navigateToWelcomePage,
+                navigateToAdminUsersList = navigateToAdminUsersList
+            )
+        }
     }
 }
 
@@ -353,7 +360,7 @@ fun UserDashboard(
                     containerColor = MyTheme.Blue,
                     action = {
                         TextButton(onClick = { showNotification = false }) {
-                            Text("Dismiss", color = Color.White)
+                            Text("Close", color = Color.White)
                         }
                     }
                 ) {
