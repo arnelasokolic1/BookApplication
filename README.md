@@ -23,7 +23,7 @@ This mobile application is designed to facilitate book management for libraries 
 - Users can search for specific books using a search bar. Additionally, both users and admins can filter books alphabetically or by the latest additions.
 
 ### About Us and FAQ:
-- Users can access the "About Us" page, where they can find frequently asked questions (FAQ) about the app.
+- Users can access the "About Us" page, where they can find answers to common questions about the app.
 
 ### User Management:
 - Admins can view and manage registered users. They can search for specific users and filter them alphabetically or by registration date.
@@ -43,11 +43,12 @@ This mobile application is designed to facilitate book management for libraries 
 
 ## Screenshots
 
-## Screenshots
-
 <div align="center">
   <img src="photo1.JPG" width="200" hspace="10">
   <img src="photo2.JPG" width="200" hspace="10">
+</div>
+<br>
+<div align="center">
   <img src="photo3.JPG" width="200" hspace="10">
   <img src="photo4.JPG" width="200" hspace="10">
 </div>
@@ -55,6 +56,9 @@ This mobile application is designed to facilitate book management for libraries 
 <div align="center">
   <img src="photo5.JPG" width="200" hspace="10">
   <img src="photo6.JPG" width="200" hspace="10">
+</div>
+<br>
+<div align="center">
   <img src="photo7.JPG" width="200" hspace="10">
   <img src="photo8.JPG" width="200" hspace="10">
 </div>
@@ -62,6 +66,9 @@ This mobile application is designed to facilitate book management for libraries 
 <div align="center">
   <img src="photo9.JPG" width="200" hspace="10">
   <img src="photo10.JPG" width="200" hspace="10">
+</div>
+<br>
+<div align="center">
   <img src="photo11.JPG" width="200" hspace="10">
   <img src="photo12.JPG" width="200" hspace="10">
 </div>
@@ -69,7 +76,9 @@ This mobile application is designed to facilitate book management for libraries 
 <div align="center">
   <img src="photo13.JPG" width="200" hspace="10">
   <img src="photo14.JPG" width="200" hspace="10">
+</div>
+<br>
+<div align="center">
   <img src="photo15.JPG" width="200" hspace="10">
   <img src="photo16.JPG" width="200" hspace="10">
 </div>
-
