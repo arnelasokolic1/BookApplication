@@ -3,7 +3,7 @@
 # BookApp 📚 
                                    
 
-This mobile application is designed to facilitate book management for libraries or bookstores. Users can browse a list of books, view brief descriptions, admins can perform actions like editing and deleting books.  Here's an overview of the key features and functionalities implemented in this project:
+This mobile application is developed to facilitate book management for libraries or bookstores. Users can browse a list of books, view brief descriptions, admins can perform actions like editing and deleting books.  Here's an overview of the key features and functionalities implemented in this project:
 
 ## Key Features:
 
