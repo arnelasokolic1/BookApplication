@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,11 +24,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -53,12 +54,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -79,8 +81,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-
-object ProfileDestination: NavigationDestination {
+object ProfileDestination : NavigationDestination {
     override val route = "profile"
     override val title = "Profile"
     const val userIdArg = "userID"
@@ -106,106 +107,104 @@ fun ProfileScreenWithTopBar(
 fun ProfileScreen(
     viewModel: UserViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
-    var uiState = viewModel.usersUiState
-    var detailsState = uiState.usersDetails
+    val uiState = viewModel.usersUiState
+    val detailsState = uiState.usersDetails
 
-
-    var name = "Naida"
-    var surname = "Fatic"
-    var email = "naida@gmail.com"
-    var password = "123456789"
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+    val GradientColors = listOf(Color(0xFF1E3A8A), Color(0xFF755A90))
 
     Log.d("profile", viewModel.usersUiState.toString())
 
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .wrapContentSize()
-    ) {
-        Box(
-            modifier = Modifier
-                .size(150.dp)
-                .clip(CircleShape)
-                .border(5.dp, MyTheme.Purple, CircleShape) // Adding a purple border
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.slika10),
-                contentDescription = "Picture",
-                modifier = Modifier.fillMaxSize()
-            )
-        }
-
-        Spacer(modifier = Modifier.size(height = 30.dp, width = 0.dp))
-        Row {
-            TextField(
-                value = viewModel.usersUiState.usersDetails.name,
-                onValueChange = {},
-                label = {
-                    Text(text = "name")
-                },
-                isError = false,
-                readOnly = true,
-                enabled = false,
-                modifier = Modifier.width(135.dp),
-                colors = TextFieldDefaults.colors(
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = GradientColors,
+                    startY = 0f,
+                    endY = 1000f
                 )
             )
-            Spacer(modifier = Modifier.size(height = 0.dp, width = 5.dp))
+            .padding(16.dp)
+    ) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentSize()
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(150.dp)
+                        .clip(CircleShape)
+                        .border(5.dp, MyTheme.Purple, CircleShape)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.admin1),
+                        contentDescription = "Admin",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.size(30.dp))
+            Row {
+                TextField(
+                    value = detailsState.name,
+                    onValueChange = {},
+                    label = {
+                        Text(text = "Name")
+                    },
+                    isError = false,
+                    readOnly = true,
+                    modifier = Modifier.weight(1f),
+                    colors = TextFieldDefaults.colors(
+                    )
+                )
+                Spacer(modifier = Modifier.size(5.dp))
+                TextField(
+                    value = detailsState.surname,
+                    onValueChange = {},
+                    label = {
+                        Text(text = "Surname")
+                    },
+                    isError = false,
+                    readOnly = true,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+            Spacer(modifier = Modifier.size(10.dp))
             TextField(
-                value = viewModel.usersUiState.usersDetails.surname,
+                value = detailsState.email,
                 onValueChange = {},
                 label = {
-                    Text(text = "surname")
+                    Text(text = "Email")
                 },
                 isError = false,
                 readOnly = true,
-                modifier = Modifier.width(135.dp)
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.size(30.dp))
+
+            Text(
+                text = "Account successfully created",
+                color = Color.White,
+                style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold, fontSize = 21.sp),
+                modifier = Modifier.padding(bottom = 12.dp),
+                fontFamily = FontFamily.Serif
             )
         }
-        Spacer(modifier = Modifier.size(height = 10.dp, width = 0.dp))
-        TextField(
-            value = viewModel.usersUiState.usersDetails.email,
-            onValueChange = {},
-            label = {
-                Text(text = "email")
-            },
-            isError = false,
-            readOnly = true
-        )
-        Spacer(modifier = Modifier.size(height = 10.dp, width = 0.dp))
-
-        Spacer(modifier = Modifier.size(height = 30.dp, width = 0.dp))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .clickable {
-                    val i = Intent(Intent.ACTION_SEND)
-                    val emailAddress = arrayOf(email)
-                    i.putExtra(Intent.EXTRA_EMAIL, emailAddress)
-                    i.setType("message/rfc822")
-                    try {
-                        context.startActivity(Intent.createChooser(i, "Choose an Email client : "))
-                    } catch (s: SecurityException) {
-                        Toast
-                            .makeText(context, "An error occurred", Toast.LENGTH_LONG)
-                            .show()
-                    }
-                }
-                .align(Alignment.Start)
-        ) {
-
-        }
-
-        Spacer(modifier = Modifier.size(height = 20.dp, width = 0.dp))
-
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
