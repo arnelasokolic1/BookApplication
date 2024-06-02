@@ -3,7 +3,11 @@ package com.example.application
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -11,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,7 +58,7 @@ fun AddBookScreen(
 ) {
     var bookName by remember { mutableStateOf("") }
     var author by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf(TextFieldValue("")) }
     val coroutineScope = rememberCoroutineScope()
     val uiState = viewModel.booksUiState
     val detailsState = uiState.booksDetails
@@ -73,7 +79,8 @@ fun AddBookScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 64.dp, start = 16.dp, end = 16.dp, bottom = 16.dp), // Adjusted padding
+                .verticalScroll(rememberScrollState())
+                .padding(top = 64.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -93,7 +100,8 @@ fun AddBookScreen(
                 label = { Text("Book Name") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp)
+                    .padding(8.dp),
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
             )
 
             TextField(
@@ -102,16 +110,22 @@ fun AddBookScreen(
                 label = { Text("Author") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp)
+                    .padding(8.dp),
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
             )
 
             TextField(
                 value = description,
-                onValueChange = { description = it; viewModel.updateUiState(detailsState.copy(description = it)) },
+                onValueChange = { description = it; viewModel.updateUiState(detailsState.copy(description = it.text)) },
                 label = { Text("Description") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
+                    .height(200.dp), // Adjust the height as needed
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = { /* Handle done action */ }),
+                maxLines = 10,
+                textStyle = LocalTextStyle.current.copy(color = Color.Black)
             )
 
             Button(
@@ -119,7 +133,6 @@ fun AddBookScreen(
                     coroutineScope.launch {
                         viewModel.register()
                         showNotification = true
-                        // Delay to hide the notification after a few seconds
                         kotlinx.coroutines.delay(3000)
                         showNotification = false
                     }
@@ -138,7 +151,7 @@ fun AddBookScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(bottom = 50.dp), // Adjust this value as needed
+                    .padding(bottom = 50.dp),
                 contentAlignment = Alignment.BottomCenter
             ) {
                 Snackbar(

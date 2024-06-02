@@ -90,7 +90,7 @@ fun RegisterScreen(
             text = "Welcome, Register!", color = Color.White,
             style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold, fontSize = 27.sp),
             modifier = Modifier.padding(bottom = 36.dp) ,
-                    fontFamily = FontFamily.Serif
+            fontFamily = FontFamily.Serif
         )
         Spacer(modifier = Modifier.height(18.dp))
         TextField(

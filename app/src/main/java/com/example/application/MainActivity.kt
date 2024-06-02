@@ -1,6 +1,6 @@
 package com.example.application
 
-import UserNavHost
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,6 +18,8 @@ import com.example.application.ui.screens.ProfileScreen
 import com.example.application.ui.screens.RegisterScreen
 import com.example.application.ui.screens.UserDashboard
 import com.example.application.ui.screens.WelcomePage
+import com.example.application.ui.screens.navigation.UserNavHost
+
 //import com.example.application.ui.screens.navigation.UserNavHost
 
 

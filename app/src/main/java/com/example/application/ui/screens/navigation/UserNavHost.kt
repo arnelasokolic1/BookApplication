@@ -1,3 +1,5 @@
+package com.example.application.ui.screens.navigation
+
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -51,21 +53,17 @@ fun UserNavHost(navController: NavHostController) {
                 navigateToAddBook = { navController.navigate(AddBookDestination.route) },
                 navigateToProfilePage = { userId -> navController.navigate("${ProfileDestination.route}/$userId") },
                 navigateToAdminUsersList = { navController.navigate(AdminUsersListDestination.route) },
-                navigateToWelcomePage = { navController.navigate(WelcomePageDestination.route) }
+                navigateToWelcomePage = { navController.navigate(WelcomePageDestination.route) },
+                navigateToAboutUs = { navController.navigate(AboutUsDestination.route) }
             )
         }
 
         composable(route = AdminUsersListDestination.route) {
             AdminUsersListWithTopBar(
                 navigateToUserDashboard = { navController.navigate(UserDashboardDestination.route) },
-
-                    navigateBack = { navController.navigateUp() }
-
-                )
-
-
+                navigateBack = { navController.navigateUp() }
+            )
         }
-
 
         composable(
             route = AdminDashboardDestination.routeWithArgs,
@@ -85,8 +83,12 @@ fun UserNavHost(navController: NavHostController) {
                 navigateToUserDashboard = { navController.navigate(UserDashboardDestination.route) },
                 navigateToRegister = { navController.navigate(RegistrationDestination.route) },
                 navigateToAdminDashboard = { navController.navigate(AdminDashboardDestination.route) },
-                        navigateBack = { navController.navigateUp() }
+                navigateBack = { navController.navigateUp() }
             )
+        }
+
+        composable(route = AboutUsDestination.route) {
+            AboutUsScreen(navigateBack = { navController.navigateUp() })
         }
     }
 }

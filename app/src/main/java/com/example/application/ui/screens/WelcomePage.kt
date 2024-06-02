@@ -7,11 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,7 +24,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.application.ui.screens.navigation.NavigationDestination
-import com.example.application.ui.screens.navigation.UserAppBar
 import com.example.myapplication.R
 
 // Define custom colors in your theme
@@ -39,6 +34,8 @@ object MyTheme {
     val GradientColors = listOf(Color(0xFF1E3A8A), Color(0xFF755A90))
     val Blue = Color(0xFF39448A)
     val Red1 = Color(0xFFB0261A)
+    val Purple1 = Color(0xFF73588C)
+    val Blue1 = Color(0xFFCFE3F1)
 }
 
 object WelcomePageDestination : NavigationDestination {
@@ -47,22 +44,36 @@ object WelcomePageDestination : NavigationDestination {
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WelcomePageWithTopBar(
     context: Context,
     navigateToLogin: () -> Unit
 ) {
     Scaffold(
-        topBar = { UserAppBar(titleScreen = WelcomePageDestination.title, canNavigateBack = false) }
-    ) {
-        WelcomePage(navigateToLogin = navigateToLogin)
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = WelcomePageDestination.title,
+                        color = Color.White,
+                        style = MaterialTheme.typography.headlineLarge // Adjust title text style if needed
+                    )
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = White // Set the TopAppBar color
+                )
+            )
+        }
+    ) { innerPadding ->
+        WelcomePage(navigateToLogin = navigateToLogin, modifier = Modifier.padding(innerPadding))
     }
 }
 
 @Composable
 fun WelcomePage(navigateToLogin: () -> Unit, modifier: Modifier = Modifier) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(

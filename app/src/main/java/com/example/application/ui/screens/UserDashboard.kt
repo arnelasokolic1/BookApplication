@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -45,7 +44,8 @@ fun UserDashboardWithTopBar(
     navigateToAddBook: () -> Unit,
     navigateToProfilePage: (Int) -> Unit,
     navigateToWelcomePage: () -> Unit,
-    navigateToAdminUsersList: () -> Unit
+    navigateToAdminUsersList: () -> Unit,
+    navigateToAboutUs: () -> Unit
 ) {
 
     Box(
@@ -71,7 +71,8 @@ fun UserDashboardWithTopBar(
                 navigateToProfilePage = navigateToProfilePage,
                 navigateToAddBook = navigateToAddBook,
                 navigateToWelcomePage = navigateToWelcomePage,
-                navigateToAdminUsersList = navigateToAdminUsersList
+                navigateToAdminUsersList = navigateToAdminUsersList,
+                navigateToAboutUs = navigateToAboutUs
             )
         }
     }
@@ -282,7 +283,8 @@ fun UserDashboard(
     navigateToProfilePage: (Int) -> Unit,
     navigateToAddBook: () -> Unit,
     navigateToWelcomePage: () -> Unit,
-    navigateToAdminUsersList: () -> Unit
+    navigateToAdminUsersList: () -> Unit,
+    navigateToAboutUs: () -> Unit
 ) {
     val homeUiState by viewModel.homeUiState.collectAsState()
     val uiState = viewModel.usersUiState
@@ -489,7 +491,16 @@ fun UserDashboard(
                                 .size(40.dp)
                                 .clickable(onClick = navigateToAdminUsersList)
                         )
+                        Spacer(modifier = Modifier.width(16.dp))
                     }
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_question_mark_24),
+                        contentDescription = "About Us",
+                        tint = Color.White,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clickable(onClick = navigateToAboutUs)
+                    )
                 }
             }
         }
@@ -498,13 +509,12 @@ fun UserDashboard(
 
 @Preview(showBackground = true)
 @Composable
-fun UserDashboardPreview() {
-    MaterialTheme {
-        UserDashboardWithTopBar(
-            navigateToAddBook = {},
-            navigateToProfilePage = {},
-            navigateToWelcomePage = {},
-            navigateToAdminUsersList = {}
-        )
-    }
+fun PreviewUserDashboard() {
+    UserDashboard(
+        navigateToProfilePage = {},
+        navigateToAddBook = {},
+        navigateToWelcomePage = {},
+        navigateToAdminUsersList = {},
+        navigateToAboutUs = {}
+    )
 }
