@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -88,6 +89,7 @@ fun BookItem(
 
     var showEditDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var showFullDescriptionDialog by remember { mutableStateOf(false) }
 
     if (showEditDialog) {
         EditBookDialog(book = book, onDismiss = { showEditDialog = false }, onUpdateClick = {
@@ -101,11 +103,16 @@ fun BookItem(
         })
     }
 
+    if (showFullDescriptionDialog) {
+        FullDescriptionDialog(book = book, onDismiss = { showFullDescriptionDialog = false })
+    }
+
     Card(
         modifier = Modifier
             .padding(6.dp)
             .fillMaxWidth()
             .shadow(8.dp, RoundedCornerShape(8.dp))
+            .clickable { showFullDescriptionDialog = true }
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -123,7 +130,7 @@ fun BookItem(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Description: ${book.description}",
+                text = "Description: ${book.description.take(100)}${if (book.description.length > 100) "..." else ""}",
                 style = MaterialTheme.typography.bodySmall
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -160,6 +167,36 @@ fun BookItem(
             }
         }
     }
+}
+
+@Composable
+fun FullDescriptionDialog(book: Books, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Close", color = MyTheme.Purple)
+            }
+        },
+        title = { Text(text = book.name) },
+        text = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 100.dp, max = 400.dp) // Ensures dialog is scrollable
+
+            ) {
+                Text(
+                    text = book.description,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(Alignment.CenterHorizontally)
+            .wrapContentHeight(Alignment.CenterVertically)
+    )
 }
 
 @Composable
@@ -255,10 +292,21 @@ fun UserDashboard(
     var notificationMessage by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
 
+    var isSortedAlphabetically by remember { mutableStateOf(false) }
+    var showLatestBooks by remember { mutableStateOf(false) }
+
     val filteredBooks = homeUiState.bookList.filter {
         it.name.contains(searchQuery, ignoreCase = true) ||
                 it.author.contains(searchQuery, ignoreCase = true) ||
                 it.description.contains(searchQuery, ignoreCase = true)
+    }.let { books ->
+        if (isSortedAlphabetically) {
+            books.sortedBy { it.name }
+        } else if (showLatestBooks) {
+            books.sortedByDescending { it.id } // Assuming 'id' can represent the order of addition
+        } else {
+            books
+        }
     }
 
     Box(
@@ -285,16 +333,41 @@ fun UserDashboard(
                 modifier = Modifier.padding(bottom = 50.dp)
             )
 
-            TextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
-                label = { Text("Search Books") },
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .border(width = 5.dp, color = MyTheme.LightPurple, shape
-                    = RoundedCornerShape(0.dp))
-            )
+                    .padding(horizontal = 20.dp, vertical = 8.dp)
+            ) {
+                TextField(
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it },
+                    label = { Text("Search Books") },
+                    modifier = Modifier
+                        .weight(1f)
+                        .border(
+                            width = 2.dp,
+                            color = MyTheme.LightPurple,
+                            shape = RoundedCornerShape(0.dp)
+                        )
+                )
+
+                IconButton(onClick = { isSortedAlphabetically = !isSortedAlphabetically }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_sort_by_alpha_24),
+                        contentDescription = "Sort Alphabetically",
+                        tint = Color.White
+                    )
+                }
+
+                IconButton(onClick = { showLatestBooks = !showLatestBooks }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_fiber_new_24),
+                        contentDescription = "Show Latest Books",
+                        tint = Color.White
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 

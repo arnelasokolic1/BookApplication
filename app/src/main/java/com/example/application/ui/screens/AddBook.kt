@@ -57,7 +57,6 @@ fun AddBookScreen(
     val uiState = viewModel.booksUiState
     val detailsState = uiState.booksDetails
     var showNotification by remember { mutableStateOf(false) }
-    val GradientColors = listOf(Color(0xFF1E3A8A), Color(0xFF755A90))
 
     Box(
         modifier = Modifier
@@ -160,7 +159,7 @@ fun AddBookScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun AddBook() {
+fun AddBookPreview() {
     MaterialTheme {
         AddBookBar(
             navigateToRegister = {},
