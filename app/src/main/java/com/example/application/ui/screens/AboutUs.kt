@@ -28,7 +28,7 @@ object AboutUsDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutUsScreen(navigateBack: () -> Unit) {
-    val faqList = remember { generateFAQs() }
+    val faqList = remember { generateFAQs() } //Definiše funkciju koja prima lambda funkciju navigateBack za navigaciju nazad.
     val scrollState = rememberLazyListState()
 
     Scaffold(

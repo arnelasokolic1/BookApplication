@@ -10,6 +10,8 @@ import androidx.navigation.navArgument
 import com.example.application.AddBookBar
 import com.example.application.AddBookDestination
 import com.example.application.ui.screens.*
+import xml.AdminDashboardDestination
+import xml.AdminDashboardScreenWithTopBar
 
 @SuppressLint("ComposableDestinationInComposeScope")
 @Composable
@@ -54,7 +56,9 @@ fun UserNavHost(navController: NavHostController) {
                 navigateToProfilePage = { userId -> navController.navigate("${ProfileDestination.route}/$userId") },
                 navigateToAdminUsersList = { navController.navigate(AdminUsersListDestination.route) },
                 navigateToWelcomePage = { navController.navigate(WelcomePageDestination.route) },
-                navigateToAboutUs = { navController.navigate(AboutUsDestination.route) }
+                navigateToAboutUs = { navController.navigate(AboutUsDestination.route) },
+                navigateToQuiz = { navController.navigate(QuizDestination.route) }
+
             )
         }
 
@@ -89,6 +93,10 @@ fun UserNavHost(navController: NavHostController) {
 
         composable(route = AboutUsDestination.route) {
             AboutUsScreen(navigateBack = { navController.navigateUp() })
+        }
+
+        composable(route = QuizDestination.route) {
+            QuizScreen(navigateBack = { navController.navigateUp() })
         }
     }
 }

@@ -27,7 +27,8 @@ fun Books.toBooksDetails() = BooksDetails(
     id = id,
     name = name,
     author = author,
-    description= description
+    description= description,
+
 )
 
 fun Books.toBookUiState(isEntryValid: Boolean = false): BooksUiState = BooksUiState(

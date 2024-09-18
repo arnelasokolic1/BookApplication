@@ -119,8 +119,8 @@ fun LoginScreen(viewModel: LoginRegistrationViewModel = viewModel(factory = AppV
                     viewModel.updateUiState(detailsState.copy(email = it))
                 },
                 enabled = true,
-                label = { Text(text = "email") },
-                placeholder = { Text(text = "example@exmaple.com") },
+                label = { Text(text = "Email") },
+                placeholder = { Text(text = "example@example.com") },
                 isError = false
             )
 
@@ -131,7 +131,7 @@ fun LoginScreen(viewModel: LoginRegistrationViewModel = viewModel(factory = AppV
                     password = it
                     viewModel.updateUiState(detailsState.copy(password = it))
                 },
-                label = { Text(text = "password") }
+                label = { Text(text = "Password") }
             )
             Spacer(modifier = Modifier.height(16.dp)) // Adding space between fields
             Button(
@@ -152,7 +152,7 @@ fun LoginScreen(viewModel: LoginRegistrationViewModel = viewModel(factory = AppV
                 modifier = Modifier
                     .padding(vertical = 16.dp)
                     .shadow(8.dp, RoundedCornerShape(50)),
-                shape = RoundedCornerShape(50)
+                shape = RoundedCornerShape(50.dp)
             ) {
                 Text(text = "LOGIN", color = Color.White)
             }

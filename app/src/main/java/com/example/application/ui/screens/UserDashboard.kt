@@ -15,11 +15,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
+
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.application.model.models.Books
 import com.example.application.ui.screens.navigation.NavigationDestination
@@ -32,7 +34,7 @@ import kotlinx.coroutines.launch
 
 object UserDashboardDestination : NavigationDestination {
     override val route = "userdashboard"
-    override val title = "User Dashboard"
+    override val title = " Dashboard"
     const val userIdArg = "userID"
     val routeWithArgs = "$route/{$userIdArg}"
     val GradientColors = listOf(Color(0xFF1E3A8A), Color(0xFF755A90))
@@ -45,7 +47,8 @@ fun UserDashboardWithTopBar(
     navigateToProfilePage: (Int) -> Unit,
     navigateToWelcomePage: () -> Unit,
     navigateToAdminUsersList: () -> Unit,
-    navigateToAboutUs: () -> Unit
+    navigateToAboutUs: () -> Unit,
+    navigateToQuiz: () -> Unit
 ) {
 
     Box(
@@ -72,12 +75,13 @@ fun UserDashboardWithTopBar(
                 navigateToAddBook = navigateToAddBook,
                 navigateToWelcomePage = navigateToWelcomePage,
                 navigateToAdminUsersList = navigateToAdminUsersList,
-                navigateToAboutUs = navigateToAboutUs
+                navigateToAboutUs = navigateToAboutUs,
+                navigateToQuiz = navigateToQuiz
+
             )
         }
     }
 }
-
 @Composable
 fun BookItem(
     book: Books, onDeleteClick: (Books) -> Unit, onUpdateClick: (Books) -> Unit,
@@ -85,8 +89,6 @@ fun BookItem(
 ) {
     val uiState = viewModel.usersUiState
     val detailsState = uiState.usersDetails
-
-    Log.d("UserDashboard1", detailsState.toString())
 
     var showEditDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -119,20 +121,31 @@ fun BookItem(
             modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = book.name,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = book.name,
+                    style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp), // Slightly larger headline
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(2.dp)
+                        .background(MyTheme.LightPurple) // Updated line color
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Author: ${book.author}",
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium.copy(fontSize = 16.sp) // Same size for Author
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Description: ${book.description.take(100)}${if (book.description.length > 100) "..." else ""}",
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodyMedium.copy(fontSize = 16.sp) // Same size for Description
             )
             Spacer(modifier = Modifier.height(16.dp))
             Row(
@@ -171,7 +184,8 @@ fun BookItem(
 }
 
 @Composable
-fun FullDescriptionDialog(book: Books, onDismiss: () -> Unit) {
+// Composable funkcija koja kreira AlertDialog prikazujući ime i opis knjige.
+fun FullDescriptionDialog(book: Books, onDismiss: () -> Unit) { // Zatvara dijalog na zahtjev putem funkcije onDismiss.
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
@@ -179,7 +193,7 @@ fun FullDescriptionDialog(book: Books, onDismiss: () -> Unit) {
                 Text("Close", color = MyTheme.Purple)
             }
         },
-        title = { Text(text = book.name) },
+        title = { Text(text = book.name) }, // Naslov dijaloga koji prikazuje ime knjige.
         text = {
             Column(
                 modifier = Modifier
@@ -226,7 +240,7 @@ fun EditBookDialog(book: Books, onDismiss: () -> Unit, onUpdateClick: (Books) ->
             Column {
                 TextField(
                     value = title,
-                    onValueChange = { title = it },
+                    onValueChange = { title = it }, // Ažurira naslov knjige kada korisnik unese novi tekst.
                     label = { Text("Title") }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -284,9 +298,11 @@ fun UserDashboard(
     navigateToAddBook: () -> Unit,
     navigateToWelcomePage: () -> Unit,
     navigateToAdminUsersList: () -> Unit,
-    navigateToAboutUs: () -> Unit
+    navigateToAboutUs: () -> Unit,
+    navigateToQuiz: () -> Unit
+
 ) {
-    val homeUiState by viewModel.homeUiState.collectAsState()
+    val homeUiState by viewModel.homeUiState.collectAsState() //omogućava ažuriranje korisničkog interfejsa kada se stanje promijeni.
     val uiState = viewModel.usersUiState
     val detailsState = uiState.usersDetails
     var searchQuery by remember { mutableStateOf("") }
@@ -297,15 +313,19 @@ fun UserDashboard(
     var isSortedAlphabetically by remember { mutableStateOf(false) }
     var showLatestBooks by remember { mutableStateOf(false) }
 
+    // Filtriranje liste knjiga prema search-u.
+
     val filteredBooks = homeUiState.bookList.filter {
         it.name.contains(searchQuery, ignoreCase = true) ||
                 it.author.contains(searchQuery, ignoreCase = true) ||
                 it.description.contains(searchQuery, ignoreCase = true)
     }.let { books ->
+
+        // Filtriranje liste knjiga prema pretraživačkom upitu.
         if (isSortedAlphabetically) {
             books.sortedBy { it.name }
         } else if (showLatestBooks) {
-            books.sortedByDescending { it.id } // Assuming 'id' can represent the order of addition
+            books.sortedByDescending { it.id }
         } else {
             books
         }
@@ -500,6 +520,17 @@ fun UserDashboard(
                         modifier = Modifier
                             .size(40.dp)
                             .clickable(onClick = navigateToAboutUs)
+
+                    )
+
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_quiz_24),
+                        contentDescription = "Quiz ",
+                        tint = Color.White,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clickable(onClick = navigateToQuiz)
+
                     )
                 }
             }
@@ -515,6 +546,8 @@ fun PreviewUserDashboard() {
         navigateToAddBook = {},
         navigateToWelcomePage = {},
         navigateToAdminUsersList = {},
-        navigateToAboutUs = {}
+        navigateToAboutUs = {},
+        navigateToQuiz = {}
+
     )
 }
